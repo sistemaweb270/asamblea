@@ -1,1 +1,1 @@
-Estamos en Mantenimiento, espeor su Comprencion
+Este sistema esta realizado para uso interno
