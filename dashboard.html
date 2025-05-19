@@ -4,191 +4,254 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="icon/inicio.ico" type="image/x-icon" >
+    <link rel="icon" href="icon/panel.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
-        /* Estilos básicos para la lista desplegable y el modal */
-        .user-menu-container {
-            position: relative;
-            display: inline-block;
+        /* CSS para ocultar la barra de desplazamiento */
+
+        /* Para navegadores basados en Webkit (Chrome, Safari) */
+        body::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar,
+        #content-frame::-webkit-scrollbar {
+            display: none; /* Oculta la barra de desplazamiento */
         }
-        .user-menu-toggle {
+
+        /* Para Firefox */
+        body {
+            scrollbar-width: none;  /* Oculta la barra de desplazamiento */
+        }
+        .sidebar {
+            scrollbar-width: none;  /* Oculta la barra de desplazamiento */
+        }
+        #content-frame {
+            scrollbar-width: none;  /* Oculta la barra de desplazamiento */
+        }
+
+
+        /* Para Internet Explorer y Edge */
+        body {
+            -ms-overflow-style: none;  /* Oculta la barra de desplazamiento */
+        }
+        .sidebar {
+            -ms-overflow-style: none;  /* Oculta la barra de desplazamiento */
+        }
+        #content-frame {
+            -ms-overflow-style: none;  /* Oculta la barra de desplazamiento */
+        }
+
+        /* Fin del CSS para ocultar la barra de desplazamiento */
+
+
+        /* Aseguramos que html y body ocupen toda la altura disponible y gestionen el overflow */
+        html, body {
+            height: 100%; /* Altura completa */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Ocultamos el overflow por defecto para controlarlo */
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            display: flex; /* Contenedor Flexbox principal */
+            width: 100%;
+            overflow-x: hidden; /* Evita scroll horizontal no deseado en el body */
+            overflow-y: auto; /* Permitimos scroll vertical en el body si el contenido excede la altura */
+        }
+
+        /* Contenedor principal que envuelve header y el iframe */
+        .main-container {
+            flex-grow: 1; /* Permite que este contenedor ocupe todo el espacio restante */
             display: flex;
+            flex-direction: column; /* Apilamos los elementos internos verticalmente */
+            width: calc(100% - 220px); /* Ocupa el 100% del ancho menos el ancho del sidebar en escritorio */
+            box-sizing: border-box;
+            padding: 20px; /* Añadimos un padding general al main-container para espacio */
+            overflow-y: auto; /* Permitimos scroll en el main-container if its content is too long */
+             /* Adjust bottom margin so there's no extra space after removing the footer */
+             margin-bottom: 0;
+             padding-bottom: 20px; /* Ensure padding at the bottom */
+        }
+
+
+        /* Estilos para la barra lateral (Sidebar) - Posición fija y altura completa */
+        .sidebar {
+            width: 220px; /* Ancho de la barra lateral */
+            background-color: #2c3e50; /* Color de fondo oscuro */
+            color: white;
+            padding-top: 20px;
+            flex-shrink: 0; /* Evita que la barra lateral se encoja */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Sombra a la derecha */
+            z-index: 1; /* Asegura que esté sobre el contenido si hay superposición */
+            height: 100vh; /* Ocupa toda la altura de la viewport */
+            overflow-y: auto; /* Añade scroll si el contenido de la barra lateral es muy largo */
+            position: sticky; /* Mantiene la barra lateral visible al hacer scroll */
+            top: 0; /* Se pega a la parte superior */
+            left: 0; /* Se pega a la parte izquierda */
+            /* Aseguramos que el sidebar esté visible por defecto */
+            display: flex;
+            visibility: visible;
+        }
+
+        .sidebar .sidebar-header {
+            text-align: center;
+            margin-bottom: 10px; /* Reducimos el margen inferior */
+            padding: 0 10px;
+            flex-shrink: 0; /* Evita que el header del sidebar se encoja */
+        }
+
+        .sidebar .sidebar-header h3 {
+            margin: 0;
+            color: #ecf0f1;
+        }
+
+        /* Estilos para la información del usuario en la barra lateral */
+        .user-sidebar-info {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #34495e; /* Separador */
+            flex-shrink: 0;
+        }
+
+        /* Estilos comunes para el contenedor del avatar (img o div generado) */
+        .user-avatar-circle {
+            width: 60px; /* Tamaño del avatar */
+            height: 60px;
+            border-radius: 50%; /* Forma circular */
+            object-fit: cover; /* Asegura que la imagen se ajuste sin distorsión */
+            border: 2px solid #ecf0f1; /* Borde blanco alrededor del avatar */
+            margin-bottom: 10px;
+            background-color: #bdc3c7; /* Color de fondo por defecto */
+            display: block; /* Asegura que el elemento sea un bloque para centrar */
+            margin-left: auto; /* Centrar horizontalmente */
+            margin-right: auto; /* Centrar horizontalmente */
+        }
+
+        /* Estilos específicos para el avatar generado (el div) */
+        .generated-avatar {
+             /* Inherits common styles from .user-avatar-circle */
+            display: flex; /* Usa flexbox para centrar la letra */
             align-items: center;
-            cursor: pointer;
+            justify-content: center;
+            color: white; /* Color del texto (la letra) */
+            font-size: 2em; /* Tamaño de la letra */
+            font-weight: bold;
+            /* Ensure text doesn't overflow if somehow too large */
+            overflow: hidden;
+             /* Importante: oculto por defecto con CSS, JS lo mostrará si es necesario */
+             display: none;
         }
-        .user-menu-toggle img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        .user-menu-toggle span {
-            margin-right: 5px;
-        }
-        .user-menu-toggle::after {
-            content: ''; /* Remove the down arrow */
+
+        #sidebar-access-name {
+            display: block; /* Mostrar el nombre en una nueva línea */
+            color: #ecf0f1; /* Color del texto */
             font-size: 1em;
+            font-weight: bold;
+            word-wrap: break-word; /* Permite que nombres largos se dividan */
+            padding: 0 5px; /* Pequeño padding horizontal */
         }
-        .user-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: #f9f9f9;
-            min-width: 120px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
+
+
+        .sidebar nav {
+            flex-grow: 1; /* Permite que la navegación ocupe el espacio restante en el sidebar */
+        }
+
+        .sidebar nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
-            display: none; /* Oculto por defecto */
-        }
-        .user-menu.show {
-            display: block;
-        }
-        .user-menu li a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
-        .user-menu li a:hover {background-color: #ddd;}
-
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 2; /* Sit on top of the config modal */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
 
-        .config-modal-content {
-            background-color: #fefefe;
-            padding: 20px;
-            border: 1px solid #ddd;
-            width: 450px; /* Aumentamos el ancho */
-            position: absolute; /* Para permitir centrado con transform */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Centrar horizontal y verticalmente */
-            border-radius: 8px; /* Bordes redondeados */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        .sidebar nav ul li {
+            border-bottom: 1px solid #34495e; /* Separador entre elementos */
+        }
+        .sidebar nav ul li:last-child {
+             border-bottom: none; /* Eliminar borde del último elemento */
         }
 
-        .config-modal-content h2 {
-            color: #333;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-align: center;
-        }
 
-        .config-modal-content label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-        }
-
-        .config-modal-content input[type="text"],
-        .config-modal-content select,
-        .config-modal-content input[type="file"] {
-            width: calc(100% - 22px); /* Ajuste para el padding */
-            padding: 10px;
-            margin-bottom: 15px;
-            display: inline-block;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .config-modal-content button {
-            background-color: #007bff; /* Azul llamativo */
+        .sidebar nav ul li a {
+            display: flex; /* Para alinear icono y texto */
+            align-items: center;
             color: white;
-            padding: 12px 20px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            border-radius: 4px;
-            font-size: 18px;
-            transition: background-color 0.3s ease; /* Transición suave para la animación */
-        }
-
-        .config-modal-content button:hover {
-            background-color: #0056b3; /* Azul más oscuro al pasar el mouse */
-            transform: scale(1.02); /* Pequeña animación al pasar el mouse */
-        }
-
-        .logout-modal-content {
-            background-color: #fefefe;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 300px; /* Smaller width for logout modal */
-            position: absolute; /* To allow centering with transform */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Center horizontally and vertically */
-            text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .logout-modal-content h4 {
-            margin-top: 0;
-        }
-
-        .logout-modal-content button {
-            background-color: #f44336; /* Red color for logout */
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 4px;
-        }
-
-        .logout-modal-content button:hover {
-            opacity: 0.8;
-        }
-
-        .logout-modal-content .cancel-button {
-            background-color: #ccc;
-            color: black;
-        }
-
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
             text-decoration: none;
+            padding: 12px 15px;
+            transition: background-color 0.3s ease; /* Smooth transition for hover/active */
+            /* Puedes añadir otras propiedades para animar aquí, por ejemplo: */
+            /* transition: background-color 0.3s ease, padding 0.2s ease; */
         }
 
-        .gear-icon {
-            margin-left: 10px;
-            cursor: pointer;
+        .sidebar nav ul li a i {
+            margin-right: 10px; /* Espacio entre icono y texto */
+            width: 20px; /* Ancho fijo para los iconos */
+            text-align: center; /* Centra el icono si es más pequeño */
         }
 
-        /* Estilos para el nuevo menú desplegable */
-        #main-nav-list li {
-            position: relative; /* Para que el submenu se posicione correctamente */
+        .sidebar nav ul li a:hover {
+            background-color: #d4a711; /* Color de fondo al pasar el mouse */
+            /* Puedes añadir animaciones aquí, por ejemplo: */
+            padding-left: 30px;
         }
 
-        #main-nav-list li > a { /* Style the top level link */
+        /* ESTILO PARA EL ENLACE ACTIVO (AL HACER CLIC) */
+        /* Apuntamos a la LI con la clase active-link, y aplicamos el estilo al A dentro */
+        #main-nav-list li.active-link > a {
+            background-color: #109a6c; /* Color de fondo para el enlace activo */
+        }
+
+
+        /* Ajustes para el header y iframe dentro de main-container */
+        header {
+            background-color: #ecf0f1; /* Color claro para el header */
+            padding: 10px 20px;
             display: flex;
+            justify-content: space-between; /* Espacio entre elementos del header */
+            align-items: center;
+            width: 100%; /* Ocupa todo el ancho del main-container */
+            box-sizing: border-box; /* Incluye padding en el ancho */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: auto; /* Elimina la altura fija */
+            margin-bottom: 20px; /* Espacio debajo del header */
+            flex-shrink: 0; /* Evita que el header se encoja */
+             /* Centramos el contenido del header ahora that user-info isn't there */
+             justify-content: center;
+        }
+
+
+        /* Estilos para el iframe */
+        #content-frame {
+            flex-grow: 1; /* Allows the iframe to take up the remaining space */
+            background-color: transparent; /* White background for the content area */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Shadow to make it stand out */
+            border-radius: 8px; /* Rounded corners */
+            /* Padding would be applied to the content inside the loaded HTML or you could wrap the iframe in a div with padding */
+            /* padding: 20px; */
+            overflow-y: auto; /* Allow vertical scroll inside the iframe if its content is too long */
+            width: 100%; /* Takes up the full available width in the main-container */
+            height: 100%; /* Tries to take up the available height in the main-container */
+            border: none; /* Removes the default iframe border */
+            box-sizing: border-box; /* Ensures padding/border is included in the size if applied */
+             display: block; /* Ensures the iframe is displayed as a block */
+        }
+
+
+        /* Footer removed */
+        /* footer { ... } */
+
+
+        /* Styles for the new dropdown menu (now in the sidebar) */
+        #main-nav-list li {
+            position: relative;
+
+        }
+
+        #main-nav-list li > a {
+            display: flex; /* To align icon and text */
             align-items: center;
         }
 
@@ -196,120 +259,431 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            position: absolute;
-            background-color:#1044a4 ;
+            position: static; /* Changed to static for submenu in sidebar */
+            background-color:#34495e; /* Submenu background color */
             font-family: system-ui;
-            min-width: 120px;
             color: white;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: none; /* Remove shadow */
             z-index: 1;
-            display: none; /* Oculto por defecto */
+            display: none; /* Hidden by default */
         }
 
-        #main-nav-list li:hover > ul {
-            display: block; /* Mostrar el submenu al pasar el mouse sobre el li padre */
-
+        #main-nav-list li.active > ul { /* Show submenu if the parent is active */
+            display: block;
         }
+        /* Active parent link style for submenu toggle */
+        /* Este estilo es para el enlace padre del submenú CUANDO el submenú está abierto */
+        #main-nav-list li.active > a {
+            background-color: #109a6c; /* Color different from main active link to distinguish */
+        }
+
 
         #main-nav-list li ul li a {
             color: white;
-            padding: 12px 16px;
+            padding: 8px 15px 8px 30px; /* Adjust padding and add indentation */
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
             text-align: left;
+            font-size: 0.9em; /* Reduce submenu font size */
+        }
+        #main-nav-list li ul li a i {
+             margin-right: 8px; /* Space between icon and text in submenu */
+             font-size: 0.9em;
+             width: 18px;
         }
 
         #main-nav-list li ul li a:hover {
-            background-color: #ddd;
+            background-color: #1e99e5; /* Submenu background color on hover */
         }
 
-        .has-submenu::after {
-            content: '\f107'; /* Unicode para una flecha hacia abajo (Font Awesome) */
+        .has-submenu > a::after { /* Apply the after pseudo-element to the link inside the li */
+            content: '\f105'; /* Unicode for a right arrow (Font Awesome) */
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             font-size: 0.8em;
-            margin-left: 5px;
+            margin-left: auto; /* Push the arrow to the right */
+            transition: transform 0.3s ease; /* Arrow animation */
         }
-        #content-frame {
-            width: 100%; /* Asegura que el ancho del iframe sea adaptable */
-            border: 0;
-            margin-top: -7px; /* Mantiene el margen superior */
+
+        .has-submenu.active > a::after { /* Rotate the arrow when the submenu is active */
+            transform: rotate(90deg);
         }
+
+
+        /* ----- Modal Styles ----- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1050; /* High z-index to be above content */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            /* When the modal is visible, we use display: flex */
+        }
+
+        /* Ensure modal is centered when visible */
+         .modal[style*="display: flex"] {
+             display: flex;
+         }
+
+
+        .config-modal-content {
+            background-color: #fefefe;
+            padding: 30px; /* Increase padding */
+            border: 1px solid #ddd;
+            width: 90%; /* Relative width */
+            max-width: 450px; /* Maximum width */
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+            position: relative; /* For positioning the close button */
+        }
+
+        .config-modal-content .form-group {
+             margin-bottom: 20px; /* Space between form groups */
+        }
+
+        .config-modal-content h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 25px; /* Increase margin */
+            text-align: center;
+        }
+
+        .config-modal-content label {
+            display: block;
+            margin-bottom: 8px; /* Increase margin */
+            color: #555;
+            font-weight: bold;
+        }
+
+        .config-modal-content input[type="text"],
+        .config-modal-content select,
+        .config-modal-content input[type="file"] {
+            width: 100%; /* Use 100% of the container */
+            padding: 12px; /* Increase padding */
+            margin-bottom: 15px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .config-modal-content input[type="file"] {
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+
+        .config-modal-content button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 20px; /* Aumentar padding */
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 10px; /* Espacio superior */
+        }
+
+        .config-modal-content button:hover {
+            background-color: #0056b3;
+            transform: scale(1.01); /* Pequeña animación */
+        }
+
+        .logout-modal-content {
+            background-color: #fefefe;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 350px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative; /* Para posicionar el botón de cerrar si se añade */
+        }
+
+        .logout-modal-content h4 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .logout-modal-content button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px; /* Ajustar padding */
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 4px;
+            transition: opacity 0.3s ease;
+        }
+
+        .logout-modal-content button:hover {
+
+            opacity: 0.9;
+        }
+
+        .logout-modal-content .cancel-button {
+            background-color: #ccc;
+            color: black;
+            transition: background-color 0.3s ease;
+        }
+        .logout-modal-content .cancel-button:hover {
+             background-color: #bbb;
+        }
+
+
+        .close-button {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: absolute; /* Posicionar absolutamente en el modal content */
+            top: 10px;
+            right: 15px;
+            line-height: 1; /* Ajusta la altura de línea para centrar el "x" */
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #777; /* Color más oscuro al pasar el mouse */
+            text-decoration: none;
+        }
+
+        .gear-icon {
+            /* Este icono ya no se usa en la estructura actual, se mantuvo el CSS de referencia */
+        }
+
+        /* Estilos para la vista previa de la imagen en el modal */
+        #profile-image-preview {
+            display: block; /* Mostrar como bloque */
+            margin-top: 10px;
+            margin-bottom: 15px;
+            max-width: 80px; /* Aumentar tamaño preview */
+            max-height: 80px;
+            border-radius: 50%; /* Circular */
+            object-fit: cover; /* Asegura que la imagen cubra el área */
+            border: 2px solid #ddd;
+        }
+
+        /* Estilos responsive básicos */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-y: auto; /* Permitir scroll en móvil */
+            }
+
+            body {
+                flex-direction: column; /* Apila la barra lateral y el contenido en pantallas pequeñas */
+            }
+
+            .sidebar {
+                width: 100%; /* Ocupa todo el ancho */
+                padding-top: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra abajo */
+                height: auto; /* Altura automática en móvil */
+                overflow-y: visible; /* Permite que el contenido se expanda */
+                position: static; /* Posición estática en móvil */
+            }
+
+             .sidebar .sidebar-header {
+                 margin-bottom: 10px; /* Reducir margen */
+             }
+            /* Ajuste para la info del usuario en móvil */
+             .user-sidebar-info {
+                 display: flex; /* Usar flexbox para layout horizontal en móvil */
+                 align-items: center;
+                 justify-content: center; /* Centrar contenido horizontalmente */
+                 padding: 10px;
+                 margin-bottom: 10px;
+                 border-bottom: none; /* Eliminar borde */
+                 border-top: 1px solid #34495e; /* Añadir borde superior */
+                 padding-top: 10px;
+             }
+
+            .user-sidebar-info .user-avatar-circle {
+                width: 40px; /* Tamaño más pequeño en móvil */
+                height: 40px;
+                margin-bottom: 0;
+                margin-right: 10px; /* Espacio entre avatar y nombre */
+            }
+
+            .generated-avatar {
+                 font-size: 1.5em; /* Tamaño más pequeño en móvil */
+            }
+
+
+            #sidebar-access-name {
+                display: inline-block; /* Mostrar en línea con el avatar */
+                font-size: 0.9em;
+                padding: 0;
+            }
+
+
+            .sidebar nav ul {
+                display: flex; /* Muestra los elementos del menú horizontalmente */
+                overflow-x: auto; /* Permite scroll horizontal si hay muchos elementos */
+                -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+                 border-bottom: 1px solid #34495e; /* Separador inferior */
+                 padding-bottom: 5px; /* Añadir padding inferior */
+                 margin-bottom: 10px; /* Espacio debajo del menú */
+            }
+
+            .sidebar nav ul li {
+                flex: 1 0 auto; /* Permite que los elementos se ajusten pero no se encojan demasiado */
+                border-bottom: none; /* Eliminar borde inferior en vista horizontal */
+                border-right: 1px solid #34495e; /* Separador vertical */
+            }
+             .sidebar nav ul li:last-child {
+                 border-right: none; /* Eliminar borde derecho del último elemento */
+             }
+
+
+            .sidebar nav ul li a {
+                justify-content: center; /* Centra el contenido del enlace */
+                padding: 8px; /* Reducir padding */
+                flex-direction: column; /* Icono y texto apilados */
+                text-align: center;
+                font-size: 0.9em;
+            }
+
+            .sidebar nav ul li a i {
+                margin-right: 0;
+                margin-bottom: 5px; /* Espacio entre icono y texto apilados */
+                 font-size: 1.2em; /* Aumentar tamaño del icono */
+            }
+
+            .sidebar nav ul li ul {
+                 position: absolute; /* Vuelve a usar posición absoluta para el submenú */
+                 top: auto; /* Adjust top position - this would require JS for correct positioning */
+                 left: 0; /* Alinear a la izquierda */
+                 right: auto;
+                 width: 100%; /* Ancho completo */
+                 box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+                 background-color: #34495e; /* Submenu background color */
+                 z-index: 5; /* Z-index to be above main content but below modals */
+            }
+
+            .sidebar nav ul li ul li a {
+                 padding: 10px 15px; /* Adjust submenu padding */
+                 flex-direction: row; /* Icono y texto en fila en el submenú */
+                 justify-content: flex-start;
+                 font-size: 0.9em;
+            }
+             .sidebar nav ul li ul li a i {
+                 margin-bottom: 0;
+                 margin-right: 10px;
+             }
+
+
+            .has-submenu > a::after {
+                 content: '\f107'; /* Flecha hacia abajo en móvil */
+                 transform: none !important; /* Reset rotation */
+                 margin-left: 5px;
+                 position: static; /* Remove absolute positioning on the main link */
+            }
+             .has-submenu.active > a::after {
+                 transform: rotate(180deg) !important; /* Rota hacia arriba cuando está activo */
+             }
+
+
+            .main-container {
+                padding: 10px; /* Reduce padding on small screens */
+                width: 100%; /* Takes up full width on mobile */
+                overflow-y: auto; /* Allow scrolling in the main-container on mobile */
+            }
+
+             #content-frame { /* Apply styles to the iframe */
+                 padding: 15px; /* Reducir padding on small screens */
+             }
+
+
+             .config-modal-content, .logout-modal-content {
+                 padding: 20px;
+             }
+              .config-modal-content h2 {
+                  font-size: 18px;
+                  margin-bottom: 15px;
+              }
+             .logout-modal-content h4 {
+                  font-size: 14px;
+                  margin-bottom: 15px;
+             }
+
+             .close-button {
+                 font-size: 20px;
+                 top: 5px;
+                 right: 10px;
+             }
+        }
+
     </style>
 </head>
 <body>
-    <header style="height:55px;">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Panel de Control</h3>
+        </div>
+
+        <div class="user-sidebar-info">
+            <img id="sidebar-avatar" src="" alt="Avatar de usuario" class="user-avatar-circle">
+            <div id="generated-avatar" class="user-avatar-circle generated-avatar">
+                <span class="avatar-letter">U</span>
+            </div>
+            <span id="sidebar-access-name">Nombre de Acceso</span>
+        </div>
         <nav>
             <ul id="main-nav-list">
-                <li><a href="pages/dashboard_inicio.html" target="content-frame">INICIO</a></li>
-                <li><a href="pages/cuestionamiento.html" target="content-frame">CUESTIONAMIENTO</a></li>
-                <li><a href="pages/generador_pdf.html" target="content-frame">GENERADOR PDF</a></li>
-            <li>
-                    <a href="#" class="has-submenu">MANUAL RUC 20</a>
-                    <ul style="font-size:13px;">
-
-                        <li><a href="pages/reposicion_ruc.html" target="content-frame" style="margin-left: 18px;">REPOSICION CHIP</a></li>
-                        <li><a href="pages/generar_cu.html" target="content-frame">GENERAR CU</a></li>
-                        <li><a href="pages/venta_ruc.html" target="content-frame">VENTA REGULAR</a></li>
-                        <li><a href="#">PORTABILIDAD</a></li>
-                        <li><a href="#">RENOVACION VEP</a></li>
-                        <li><a href="#">RENOVACION CONTADO</a></li>
-                        <li><a href="#">CAMBIO DE MERCADO RUC A DNI</a></li>
-                        <li><a href="#">CAMBIO DE MERCADO DNI A RUC</a></li>
-                        
-                        
+                <li><a href="pages/dashboard_inicio.html" target="content-frame"><i class="fas fa-home"></i> INICIO</a></li>
+                <li><a href="pages/cuestionamiento.html" target="content-frame"><i class="fas fa-edit"></i> REGISTRAR</a></li>
+                <li><a href="pages/generador_pdf.html" target="content-frame"><i class="fas fa-file-pdf"></i> GENERADOR PDF</a></li>
+                <li class="has-submenu">
+                    <a href="#"><i class="fas fa-cogs"></i> CONFIGURACIÓN</a>
+                    <ul>
+                        <li><a href="#" id="open-config-modal-sidebar"><i class="fas fa-user-cog"></i> Administrador</a></li>
+                        <li><a href="#" class="development-link" data-message="Configuración General"><i class="fas fa-cog"></i> General</a></li>
+                        <li><a href="pages/usuarios.html" target="content-frame"><i class="fas fa-users"></i> Usuarios</a></li>
                     </ul>
                 </li>
-                
-
-
-
-
-
-
-
+                <li class="has-submenu">
+                    <a href="#"><i class="fas fa-chart-bar"></i> REPORTES</a>
+                    <ul>
+                        <li><a href="#" class="development-link" data-message="Reporte 1"><i class="fas fa-chart-line"></i> Reporte 1</a></li>
+                        <li><a href="#" class="development-link" data-message="Reporte 2"><i class="fas fa-chart-area"></i> Reporte 2</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i>SALIR</a></li>
             </ul>
         </nav>
-        <div class="user-info">
-            <div class="user-menu-container">
-                <div class="user-menu-toggle" id="user-menu-toggle">
-                    <img id="user-avatar" src="" alt="Avatar" style="width:38px; height: 38px;margin-right: -10px;">
-                    <span id="username-display"></span>
-                    <i class="fas fa-cog gear-icon"></i>
-                </div>
-                <ul class="user-menu" id="user-menu" >
-                    <li><a href="#" id="open-config-modal">Administrador</a></li>
-                    <li><a href="#" id="logout-link">Cerrar Sesión</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
+    </div>
 
-    <main>
-        <div class="dashboard-info" style="margin-top:-20px;">
-            <h2 style="font-family: Arial, Helvetica, sans-serif; color: #fff; font-size: 40px;margin-left: 120px; margin-top:-5px">ESTAS EN TU PANEL DE CONTROL</h2>
-            <p style="font-family: Arial, Helvetica, sans-serif; color: #f38c08;font-size: 30px;margin-left: 120px;margin-top:-10px">BIENVENIDO, <span id="welcome-username"></span>!</p>
-            <div class="real-time" style="font-family:Arial, Helvetica, sans-serif; color: #fff;font-size: 25px;margin-left: 120px;margin-top:-10px">
-                <span id="current-time"></span>
-            </div>
-        </div>
-        <iframe name="content-frame" id="content-frame" src="pages/dashboard_inicio.html" frameborder="0" style="height: 1500px; margin-top: -7px;">
+    <div class="main-container">
+         <iframe name="content-frame" id="content-frame" src="pages/dashboard_inicio.html" frameborder="0">
+            <p>Tu navegador no soporta iframes. Verifica la ruta del archivo y si est&aacute;s usando un servidor local.</p>
         </iframe>
-    </main>
 
-    <footer>
-        <p>&copy; Versión sistema 8.5.02.23 Todos los derechos reservados abril 2025</p>
-    </footer>
+         </div>
 
     <div id="config-modal" class="modal">
         <div class="config-modal-content">
             <span class="close-button" id="close-config-modal">&times;</span>
             <h2>Configuración de Usuario</h2>
+            <div class="form-group">
             <label for="access-name">Nombre de Acceso:</label>
-            <input type="text" id="access-name" name="access-name">
+            <input type="text" class="form-control" id="access-name" name="access-name">
+            </div>
 
+            <div class="form-group">
             <label for="font-type">Tipo de Letra:</label>
-            <select id="font-type" name="font-type">
+            <select class="form-control" id="font-type" name="font-type">
                 <option value="Arial">Arial</option>
                 <option value="Times New Roman">Times New Roman</option>
                 <option value="Verdana">Verdana</option>
@@ -321,176 +695,560 @@
                 <option value="Impact">Impact</option>
                 <option value="Comic Sans MS">Comic Sans MS</option>
             </select>
+            </div>
 
+             <div class="form-group">
             <label for="profile-image">Imagen de Perfil:</label>
-            <input type="file" id="profile-image" name="profile-image">
-            <img id="profile-image-preview" src="" alt="Vista previa de la imagen" style="max-width: 50px; max-height: 50px;">
+            <input type="file" class="form-control-file" id="profile-image" name="profile-image" accept="image/*"> <img id="profile-image-preview" src="" alt="Vista previa de la imagen">
+             </div>
 
-            <button id="save-config">Guardar Configuración</button>
+            <button id="save-config" class="btn btn-primary">Guardar Configuración</button>
         </div>
     </div>
 
     <div id="logout-modal" class="modal">
         <div class="logout-modal-content">
+            <span class="close-button" id="close-logout-modal">&times;</span>
             <h4>¿Estas Apunto de Cerrar tu Sesion?</h4>
             <button id="confirm-logout">Cerrar Sesión</button>
-            <button id="cancel-logout" class="cancel-button">Cancelar</button>
+            <button id="cancel-button" class="cancel-button">Cancelar</button>
         </div>
     </div>
 
-    <script src="js/script.js"></script>
     <script>
+        console.log("Script iniciado: DOMContentLoaded"); // Debugging inicial
+
         document.addEventListener('DOMContentLoaded', function() {
-            const usernameDisplay = document.getElementById('username-display');
-            const welcomeUsername = document.getElementById('welcome-username');
-            const currentTimeDisplay = document.getElementById('current-time');
+            console.log("DOMContentLoaded ejecutado."); // Debugging: DOM ready
+
+            // Get references to elements
             const logoutLink = document.getElementById('logout-link');
-            const userAvatar = document.getElementById('user-avatar');
             const developmentLinks = document.querySelectorAll('.development-link');
-            const userMenuToggle = document.getElementById('user-menu-toggle');
-            const userMenu = document.getElementById('user-menu');
-            const openConfigModal = document.getElementById('open-config-modal');
+            const openConfigModalSidebar = document.getElementById('open-config-modal-sidebar');
             const configModal = document.getElementById('config-modal');
             const closeConfigModal = document.getElementById('close-config-modal');
+            const closeLogoutModal = document.getElementById('close-logout-modal');
             const saveConfigButton = document.getElementById('save-config');
             const body = document.body;
             const profileImageInput = document.getElementById('profile-image');
             const profileImagePreview = document.getElementById('profile-image-preview');
             const accessNameInput = document.getElementById('access-name');
             const fontTypeSelect = document.getElementById('font-type');
-            const gearIcon = document.querySelector('.gear-icon');
             const mainNavList = document.getElementById('main-nav-list');
             const logoutModal = document.getElementById('logout-modal');
             const confirmLogoutButton = document.getElementById('confirm-logout');
-            const cancelLogoutButton = document.getElementById('cancel-logout');
+            const cancelLogoutButton = document.getElementById('cancel-button');
+            const iframeElement = document.getElementById('content-frame'); // Referencia al iframe
 
+            // --- Referencias a los nuevos elementos del sidebar ---
+            const sidebarAvatar = document.getElementById('sidebar-avatar');
+            const sidebarAccessName = document.getElementById('sidebar-access-name');
+            const generatedAvatarDiv = document.getElementById('generated-avatar'); // Nuevo div para avatar generado
+            const avatarLetterSpan = generatedAvatarDiv ? generatedAvatarDiv.querySelector('.avatar-letter') : null; // Span para la letra
+
+
+            // La lógica de login/redirigir se mantiene
             const loggedInUsername = localStorage.getItem('username');
+            // Keep these variables in case they are used in the config modal
             let currentFont = localStorage.getItem('font-type') || 'Arial';
-            let currentAvatar = localStorage.getItem('profile-image') || `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${loggedInUsername}&size=64`;
-            let currentAccessName = localStorage.getItem('access-name') || loggedInUsername;
+            let currentAccessName = localStorage.getItem('access-name') || loggedInUsername || 'Usuario'; // Usar username si no hay access-name
 
+
+            // The applyFont function is kept if you want the body font to change with config
             function applyFont() {
                 body.style.fontFamily = currentFont;
             }
 
-            function updateAvatar() {
-                userAvatar.src = currentAvatar;
+            // --- Funciones para generar avatar simple ---
+
+            // Generar un color hexadecimal a partir de una cadena
+            function generateColorFromString(str) {
+                let hash = 0;
+                if (!str || str.length === 0) {
+                    return '#cccccc'; // Color por defecto si la cadena está vacía
+                }
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32bit integer
+                }
+                let color = '#';
+                for (let i = 0; i < 3; i++) {
+                    const value = (hash >> (i * 8)) & 0xFF;
+                    color += ('00' + value.toString(16)).slice(-2);
+                }
+                return color;
             }
 
-            function updateUserInfoDisplay() {
-                usernameDisplay.textContent = currentAccessName;
-                welcomeUsername.textContent = currentAccessName;
+            // Generar y mostrar el avatar simple basado en el nombre
+            function displayGeneratedAvatar(name) {
+                 if (!generatedAvatarDiv || !avatarLetterSpan) {
+                     console.error("Generated avatar elements not found.");
+                     return;
+                 }
+
+                 const displayName = name || loggedInUsername || 'Usuario'; // Usar nombre de acceso, username o 'Usuario'
+                 const firstLetter = displayName ? displayName.charAt(0).toUpperCase() : 'U'; // Primera letra o 'U'
+                 const bgColor = generateColorFromString(displayName); // Generar color basado en el nombre
+
+                 avatarLetterSpan.textContent = firstLetter;
+                 generatedAvatarDiv.style.backgroundColor = bgColor;
+                 generatedAvatarDiv.style.display = 'flex'; // Mostrar el avatar generado
+
+                 // Asegurarse de que el avatar de imagen esté oculto
+                 if (sidebarAvatar) {
+                     sidebarAvatar.style.display = 'none';
+                 }
+                 console.log(`Generated avatar displayed for: ${displayName}`);
             }
+
+
+            // --- Función para actualizar la info del usuario en el sidebar (modificada) ---
+            function updateSidebarUserInfo() {
+                 const savedAccessName = localStorage.getItem('access-name') || localStorage.getItem('username') || 'Usuario';
+                 const savedAvatarDataUrl = localStorage.getItem('profile-image'); // Renombrado para claridad
+
+                 if (sidebarAccessName) {
+                     sidebarAccessName.textContent = savedAccessName;
+                 }
+
+                 if (sidebarAvatar && generatedAvatarDiv) { // Asegurarse de que ambos elementos existen
+                     // Verificar si hay una URL de data válida guardada para el avatar custom
+                     if (savedAvatarDataUrl && typeof savedAvatarDataUrl === 'string' && savedAvatarDataUrl.startsWith('data:image/')) {
+                         sidebarAvatar.src = savedAvatarDataUrl;
+                         sidebarAvatar.style.display = 'block'; // Mostrar la imagen custom
+                         generatedAvatarDiv.style.display = 'none'; // Ocultar el avatar generado
+                         console.log("Sidebar avatar updated from localStorage (custom image).");
+                     } else {
+                         // Si no hay imagen guardada o no es válida, mostrar el avatar generado
+                         displayGeneratedAvatar(savedAccessName); // Generar y mostrar basado en el nombre de acceso
+                          console.log("No valid custom avatar found, displaying generated avatar.");
+                     }
+                 } else if (generatedAvatarDiv) {
+                     // Si sidebarAvatar no existe, solo mostrar el generado
+                     displayGeneratedAvatar(savedAccessName);
+                      console.log("Sidebar avatar element not found, displaying generated avatar.");
+                 } else {
+                      console.error("Neither sidebar avatar nor generated avatar elements found.");
+                 }
+            }
+
 
             if (loggedInUsername) {
-                updateUserInfoDisplay();
-                updateAvatar();
                 applyFont();
-                accessNameInput.value = currentAccessName;
-                fontTypeSelect.value = currentFont;
-                if (localStorage.getItem('profile-image')) {
-                    profileImagePreview.src = localStorage.getItem('profile-image');
-                }
+                // Check if config modal elements exist before trying to assign values
+                if(accessNameInput) accessNameInput.value = localStorage.getItem('access-name') || loggedInUsername; // Cargar access-name o username
+                if(fontTypeSelect) fontTypeSelect.value = currentFont;
+
+                // Cargar la vista previa de la imagen en el modal si está guardada
+                 const savedProfileImage = localStorage.getItem('profile-image');
+                 if (profileImagePreview && savedProfileImage && typeof savedProfileImage === 'string' && savedProfileImage.startsWith('data:image/')) {
+                     profileImagePreview.src = savedProfileImage;
+                     profileImagePreview.style.display = 'block'; // Mostrar la vista previa si hay imagen
+                 } else if (profileImagePreview) {
+                     profileImagePreview.style.display = 'none'; // Ocultar si no hay imagen guardada o no es válida
+                 }
+
+
+                // --- Cargar la última página visitada en el iframe ---
+                 const lastPageKey = 'lastVisitedDashboardPage'; // Clave para localStorage
+                 const lastVisitedPage = localStorage.getItem(lastPageKey);
+
+                 if (lastVisitedPage && iframeElement) {
+                     iframeElement.src = lastVisitedPage;
+                     console.log(`Cargando última página visitada: ${lastVisitedPage}`);
+
+                     // Opcional: Marcar el enlace activo en el sidebar al cargar la última página
+                     // Tendrías que encontrar el enlace en el sidebar que coincide con lastVisitedPage
+                     // y añadirle/quitarle la clase 'active-link' y 'active' para submenús.
+                     // Esto puede ser complejo dependiendo de tu estructura y requeriría más lógica.
+                     // Implementación simple de marcado activo basado en href:
+                     const activeLinkElement = document.querySelector(`.sidebar nav ul a[href="${lastVisitedPage}"]`);
+                      if (activeLinkElement) {
+                          // Remueve la clase 'active-link' de todos los LIs primero
+                           mainNavList.querySelectorAll('li').forEach(li => {
+                               li.classList.remove('active-link');
+                           });
+                           // Remueve la clase 'active' de todos los has-submenu primero
+                           mainNavList.querySelectorAll('.has-submenu').forEach(li => {
+                               li.classList.remove('active');
+                           });
+
+
+                          activeLinkElement.parentElement.classList.add('active-link');
+                          console.log(`Marking link as active on load: ${activeLinkElement.textContent}`); // Debugging
+
+                          // Si es parte de un submenú, también expandir el submenú padre
+                           let parentSubmenu = activeLinkElement.closest('.has-submenu');
+                           while(parentSubmenu) {
+                                parentSubmenu.classList.add('active');
+                                console.log(`Expanding parent submenu on load: ${parentSubmenu.querySelector('a').textContent}`); // Debugging
+                                parentSubmenu = parentSubmenu.parentElement.closest('.has-submenu');
+                           }
+                      } else {
+                          // Si la última página guardada no corresponde a un enlace, marcar inicio por defecto
+                          const defaultLink = document.querySelector('.sidebar nav ul a[href="pages/dashboard_inicio.html"]');
+                           if(defaultLink) {
+                               // Asegurarse de limpiar otros activos primero
+                                mainNavList.querySelectorAll('li').forEach(li => li.classList.remove('active-link'));
+                                mainNavList.querySelectorAll('.has-submenu').forEach(li => li.classList.remove('active'));
+                               defaultLink.parentElement.classList.add('active-link');
+                               console.log('Last visited page link not found, marking default link as active.'); // Debugging
+                           }
+                      }
+
+                 } else if (iframeElement) {
+                     // Si no hay última página guardada, la fuente por defecto ya está en el HTML
+                     console.log('No hay última página visitada guardada. Cargando página de inicio por defecto.');
+                      // Marcar el enlace de inicio como activo por defecto
+                     const defaultLink = document.querySelector('.sidebar nav ul a[href="pages/dashboard_inicio.html"]');
+                      if(defaultLink) {
+                           // Asegurarse de limpiar otros activos primero
+                           mainNavList.querySelectorAll('li').forEach(li => li.classList.remove('active-link'));
+                           mainNavList.querySelectorAll('.has-submenu').forEach(li => li.classList.remove('active'));
+                          defaultLink.parentElement.classList.add('active-link');
+                           console.log('No last visited page found, marking default link as active.'); // Debugging
+                      }
+                 }
+
+
+                 // --- Mostrar información del usuario en el sidebar al cargar ---
+                 updateSidebarUserInfo();
+
+
             } else {
-                window.location.href = 'index.html'; // Redirigir si no hay usuario logueado
-            }
-
-            function updateClock() {
-                const now = new Date();
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const seconds = now.getSeconds().toString().padStart(2, '0');
-                currentTimeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
-            }
-
-            updateClock();
-            setInterval(updateClock, 1000); // Actualizar el reloj cada segundo
-
-            logoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                userMenu.classList.remove('show'); // Close the user menu
-                logoutModal.style.display = "block"; // Show the logout confirmation modal
-            });
-
-            confirmLogoutButton.addEventListener('click', function() {
-                localStorage.removeItem('username');
-                localStorage.removeItem('profile-image');
-                localStorage.removeItem('font-type');
-                localStorage.removeItem('access-name');
+                // If no user logged in, redirect to login page
+                console.log("User not logged in, redirecting to index.html"); // Debugging
                 window.location.href = 'index.html';
-            });
+            }
 
-            cancelLogoutButton.addEventListener('click', function() {
-                logoutModal.style.display = "none"; // Hide the logout confirmation modal
-            });
 
-            developmentLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault(); // Evitar que el enlace intente navegar
-                    const featureName = this.getAttribute('data-message');
-                    alert(`La sección "${featureName}" se encuentra en desarrollo.`);
+            // ** Script para Cerrar Sesión (funciona con el modal) **
+            console.log("Setting up listener for Logout"); // Debugging
+            if(logoutLink) { // Check if element exists (should exist in sidebar)
+                logoutLink.addEventListener('click', function(e) {
+                    console.log("Logout click detected."); // Debugging
+                    e.preventDefault(); // Previene la navegación por defecto del enlace
+                    if(logoutModal) logoutModal.style.display = "flex"; // Show the confirmation modal
                 });
+            } else {
+                 console.error("Error: Element #logout-link not found."); // Debugging if element is missing
+            }
+
+
+            console.log("Setting up listener for Confirm Logout"); // Debugging
+            if(confirmLogoutButton) { // Check if element exists (should exist in modal)
+                confirmLogoutButton.addEventListener('click', function() {
+                    console.log("Confirm Logout click detected."); // Debugging
+                    // Logout logic (remove localStorage data and redirect)
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('profile-image'); // También removemos la imagen del perfil
+                    localStorage.removeItem('font-type');
+                    localStorage.removeItem('access-name');
+                    localStorage.removeItem('lastVisitedDashboardPage'); // También limpiamos la última página visitada al cerrar sesión
+                    window.location.href = 'index.html'; // Redirige a la página de login
+                });
+            } else {
+                 console.error("Error: Element #confirm-logout not found."); // Debugging if element is missing
+            }
+
+
+            console.log("Setting up listener for Cancel Logout"); // Debugging
+            if(cancelLogoutButton) { // Check if element exists (should exist in modal)
+                 cancelLogoutButton.addEventListener('click', function() {
+                     console.log("Cancel Logout click detected."); // Debugging
+                     if(logoutModal) logoutModal.style.display = "none"; // Hide the modal
+                 });
+            } else {
+                 console.error("Error: Element #cancel-button not found."); // Debugging if element is missing
+            }
+
+
+            console.log("Setting up listener for closing Logout modal (X)"); // Debugging
+            if (closeLogoutModal) { // Check if element exists (should exist in modal)
+                closeLogoutModal.addEventListener('click', function() {
+                    console.log("X click on Logout modal detected."); // Debugging
+                    if(logoutModal) logoutModal.style.display = "none"; // Hide the modal
+                });
+            } else {
+                 console.error("Error: Element #close-logout-modal not found."); // Debugging if element is missing
+            }
+
+
+            // ** Script to open the Config Modal **
+            console.log("Setting up listener to open Config modal (Sidebar)"); // Debugging
+            // Listener for the "Administrador" link in the sidebar
+            if (openConfigModalSidebar) { // Check if element exists (should exist in sidebar)
+                 openConfigModalSidebar.addEventListener('click', function(e) {
+                     console.log("Administrador (Sidebar) click detected."); // Debugging
+                     e.preventDefault(); // Previene la navegación por defecto
+                     if(configModal) configModal.style.display = "flex"; // Show the config modal
+
+                     // Cargar los valores guardados en el modal al abrirlo
+                     const savedAccessName = localStorage.getItem('access-name') || localStorage.getItem('username') || '';
+                     const savedFontType = localStorage.getItem('font-type') || 'Arial';
+                     const savedProfileImage = localStorage.getItem('profile-image');
+
+                     if(accessNameInput) accessNameInput.value = savedAccessName;
+                     if(fontTypeSelect) fontTypeSelect.value = savedFontType;
+
+                     if (profileImagePreview && savedProfileImage && typeof savedProfileImage === 'string' && savedProfileImage.startsWith('data:image/')) {
+                         profileImagePreview.src = savedProfileImage;
+                         profileImagePreview.style.display = 'block'; // Mostrar la vista previa si hay imagen
+                     } else if (profileImagePreview) {
+                          profileImagePreview.style.display = 'none'; // Ocultar si no hay imagen guardada o no es válida
+                     }
+                 });
+            } else {
+                 console.error("Error: Element #open-config-modal-sidebar not found."); // Debugging if element is missing
+            }
+
+            // Removed the listener for the config link in the header since user-info was removed
+
+
+            console.log("Setting up listener to close Config modal (X)"); // Debugging
+            // Listener to close the Config Modal when clicking the X
+            if(closeConfigModal) { // Check if element exists (should exist in modal)
+                 closeConfigModal.addEventListener('click', function() {
+                     console.log("X click on Config modal detected."); // Debugging
+                     if(configModal) configModal.style.display = "none"; // Hide the config modal
+                 });
+            } else {
+                 console.error("Error: Element #close-config-modal not found."); // Debugging if element is missing
+            }
+
+            // Listener to close the Config Modal when clicking outside of it
+            if(configModal) { // Check if modal element exists
+                 window.addEventListener('click', function(event) {
+                     // Verificar si el clic fue dentro del contenido del modal
+                     const isClickInsideModalContent = event.target.closest('.config-modal-content');
+                     // Si el clic fue en el fondo del modal (el contenedor #config-modal) y no dentro del contenido
+                     if (event.target === configModal && !isClickInsideModalContent) {
+                         console.log("Click outside Config modal content detected, closing modal."); // Debugging
+                         configModal.style.display = "none"; // Hide the modal
+                     }
+                 });
+            } else {
+                 console.error("Error: Element #config-modal not found."); // Debugging if element is missing
+            }
+
+
+            // ** Script to save Config Modal settings **
+            console.log("Setting up listener to save Config"); // Debugging
+            if(saveConfigButton) { // Check if element exists
+                 saveConfigButton.addEventListener('click', function() {
+                     console.log("Save Config button click detected."); // Debugging
+                     const newAccessName = accessNameInput.value.trim();
+                     const newFontType = fontTypeSelect.value;
+                     const profileImageFile = profileImageInput.files[0]; // Get the file input element
+
+                     // Guardar Nombre de Acceso y Tipo de Letra en localStorage
+                     localStorage.setItem('access-name', newAccessName);
+                     localStorage.setItem('font-type', newFontType);
+
+                     // Aplicar la nueva fuente al body
+                     currentFont = newFontType;
+                     applyFont();
+
+                     // Manejar la carga y guardado de la imagen de perfil
+                     if (profileImageFile) {
+                         const reader = new FileReader();
+                         reader.onload = function(e) {
+                             const imageDataUrl = e.target.result;
+                             localStorage.setItem('profile-image', imageDataUrl);
+                             console.log("Profile image saved to localStorage."); // Debugging
+
+                             // Actualizar la vista previa en el modal y el avatar en el sidebar
+                             if(profileImagePreview) {
+                                 profileImagePreview.src = imageDataUrl;
+                                 profileImagePreview.style.display = 'block';
+                             }
+                             // Llamar a updateSidebarUserInfo para que maneje la visualización correcta
+                             updateSidebarUserInfo();
+                              console.log("Profile image updated in modal preview and sidebar."); // Debugging
+                         }
+                         reader.onerror = function() {
+                             console.error("Error reading profile image file.");
+                             alert("Error al cargar la imagen de perfil.");
+                             // Si hay un error, intentar mostrar el avatar generado como fallback
+                             updateSidebarUserInfo();
+                         };
+                         // Leer el archivo como Data URL
+                         reader.readAsDataURL(profileImageFile);
+                     } else {
+                         // Si no se seleccionó una nueva imagen, pero ya había una guardada, mantenerla.
+                         // Si se quiere permitir borrar la imagen, se necesitaría un botón específico.
+                         console.log("No new profile image selected."); // Debugging
+
+                         // Si el input de archivo está vacío, y presionamos guardar,
+                         // debemos decidir si esto significa "eliminar avatar custom".
+                         // Una forma simple es, si el input file está vacío, removemos la imagen de localStorage.
+                         // Si quieres un comportamiento diferente, ajusta esta lógica.
+                          if (localStorage.getItem('profile-image')) {
+                              // Si había una imagen guardada y no se seleccionó una nueva,
+                              // aquí podrías optar por removerla si eso es lo deseado al "guardar sin seleccionar".
+                              // Por ahora, la mantenemos.
+                              console.log("No new file selected, keeping existing profile image if any."); // Debugging
+                          } else {
+                               console.log("No new file selected and no existing profile image."); // Debugging
+                          }
+
+                         // Asegurarse de que el avatar en el sidebar se muestre correctamente
+                         // (será el generado si no hay imagen custom)
+                         updateSidebarUserInfo();
+                     }
+
+                     // Actualizar el nombre de acceso en el sidebar
+                      if(sidebarAccessName) {
+                          sidebarAccessName.textContent = newAccessName;
+                          console.log("Sidebar access name updated."); // Debugging
+                      } else {
+                          console.error("Sidebar access name element not found during save."); // Debugging
+                      }
+
+
+                     alert('Configuración guardada con éxito.');
+                     if(configModal) configModal.style.display = "none"; // Ocultar el modal después de guardar
+
+                     // La llamada a updateSidebarUserInfo() dentro del manejo del archivo
+                     // ya se encarga de actualizar el avatar en el sidebar.
+
+                 });
+            } else {
+                 console.error("Error: Element #save-config not found."); // Debugging if element is missing
+            }
+
+
+            // ** Script para manejar Submenús en el Sidebar **
+            console.log("Setting up submenu toggles"); // Debugging
+            mainNavList.querySelectorAll('.has-submenu > a').forEach(toggle => {
+                 toggle.addEventListener('click', function(e) {
+                     e.preventDefault(); // Previene la navegación por defecto
+                     const parentLi = toggle.parentElement;
+
+                     // Cerrar otros submenús abiertos en el mismo nivel
+                     mainNavList.querySelectorAll('.has-submenu.active').forEach(openItem => {
+                         // Cerrar si no es el elemento clickeado O si es un sub-submenú abierto
+                         // La condición .closest('.has-submenu') !== parentLi.closest('.has-submenu')
+                         // podría ser útil si tienes más de 2 niveles de submenús.
+                         // Para 2 niveles, comparar openItem !== parentLi es suficiente.
+                         if (openItem !== parentLi) {
+                             openItem.classList.remove('active');
+                             console.log(`Closed submenu: ${openItem.querySelector('a').textContent}`); // Debugging
+                         }
+                     });
+
+                     // Alternar la clase 'active' en el LI padre para mostrar/ocultar el submenú
+                     parentLi.classList.toggle('active');
+                     console.log(`Submenu toggle for ${toggle.textContent} clicked. Active state: ${parentLi.classList.contains('active')}`); // Debugging
+                 });
             });
 
-            // Toggle user menu on click of the user info area (avatar, username, gear icon)
-            userMenuToggle.addEventListener('click', function() {
-                userMenu.classList.toggle('show');
+            // --- Lógica para cerrar submenús al hacer clic en enlaces principales ---
+            console.log("Setting up listener to close submenus on main link click"); // Debugging
+            mainNavList.querySelectorAll('li > a').forEach(link => {
+                 // Solo añadir listener a enlaces que NO son padres de submenús
+                 if (!link.parentElement.classList.contains('has-submenu')) {
+                     link.addEventListener('click', function() {
+                         // Cerrar todos los submenús abiertos
+                         mainNavList.querySelectorAll('.has-submenu.active').forEach(openItem => {
+                             openItem.classList.remove('active');
+                             console.log(`Closed submenu due to main link click: ${openItem.querySelector('a').textContent}`); // Debugging
+                         });
+                     });
+                 }
             });
 
-            // Close user menu when clicking outside
-            window.addEventListener('click', function(event) {
-                if (!event.target.matches('.user-menu-toggle') && !event.target.matches('.user-menu *') && event.target !== gearIcon) {
-                    if (userMenu.classList.contains('show')) {
-                        userMenu.classList.remove('show');
-                    }
-                }
-            });
 
-            openConfigModal.addEventListener('click', function(e) {
-                e.preventDefault();
-                configModal.style.display = "block";
-                userMenu.classList.remove('show'); // Cerrar el menú al abrir el modal
-            });
+            // --- Lógica para cerrar submenús al hacer clic fuera del sidebar ---
+             console.log("Setting up listener to close submenus on click outside sidebar"); // Debugging
+             document.addEventListener('click', function(event) {
+                 const isClickInsideSidebar = event.target.closest('.sidebar'); // Verifica si el clic fue dentro del sidebar
+                 // Verifica si el clic fue en un toggle de submenú (incluye el icono o el texto dentro del <a>)
+                 const isClickOnSubmenuToggle = event.target.closest('.has-submenu > a');
 
-            closeConfigModal.addEventListener('click', function() {
-                configModal.style.display = "none";
-            });
 
-            saveConfigButton.addEventListener('click', function() {
-                const newAccessName = accessNameInput.value;
-                const newFontType = fontTypeSelect.value;
+                 // Si el clic no fue dentro del sidebar completo O (si fue dentro del sidebar PERO no en un toggle de submenú)
+                 // Queremos cerrar submenús si el clic fue fuera del sidebar, o dentro del sidebar pero no en un elemento que debería mantener un submenú abierto.
+                 // Los elementos que deberían mantener un submenú abierto son los toggles (.has-submenu > a).
+                 // Si clickeamos un enlace dentro de un submenú, NO queremos que se cierre el submenú inmediatamente.
+                 const isClickInsideOpenSubmenu = event.target.closest('.has-submenu.active ul'); // Verifica si el clic fue dentro de un submenú abierto
 
-                localStorage.setItem('access-name', newAccessName);
-                localStorage.setItem('font-type', newFontType);
-                localStorage.removeItem('role'); // Remove role setting
 
-                currentAccessName = newAccessName;
-                currentFont = newFontType;
+                 // Criterio para cerrar submenús:
+                 // 1. El clic fue completamente fuera del sidebar.
+                 // 2. El clic fue dentro del sidebar, pero no en un toggle de submenú Y no dentro de un submenú abierto.
+                 if (!isClickInsideSidebar || (isClickInsideSidebar && !isClickOnSubmenuToggle && !isClickInsideOpenSubmenu)) {
+                      // Cerrar todos los submenús abiertos
+                     mainNavList.querySelectorAll('.has-submenu.active').forEach(openItem => {
+                          openItem.classList.remove('active');
+                          console.log(`Closed submenu due to click outside or on non-toggle/non-submenu element: ${openItem.querySelector('a').textContent}`); // Debugging
+                     });
+                 }
+             });
 
-                updateUserInfoDisplay();
-                applyFont();
-                configModal.style.display = "none";
-            });
 
-            profileImageInput.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        profileImagePreview.src = e.target.result;
-                        localStorage.setItem('profile-image', e.target.result);
-                        currentAvatar = e.target.result;
-                        updateAvatar();
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    profileImagePreview.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${loggedInUsername}&size=64`;
-                    localStorage.removeItem('profile-image');
-                    currentAvatar = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${loggedInUsername}&size=64`;
-                    updateAvatar();
-                }
-            });
-        });
+            // ** Script para marcar el enlace activo en el Sidebar (Simple) **
+            // Podrías mejorar esta lógica para que sea más robusta con la carga del iframe
+             console.log("Setting up active link highlighting"); // Debugging
+             mainNavList.querySelectorAll('li > a').forEach(link => {
+                 link.addEventListener('click', function() {
+                     // Remueve la clase 'active-link' de todos los LIs de nivel superior
+                     mainNavList.querySelectorAll('#main-nav-list > li').forEach(li => {
+                         li.classList.remove('active-link');
+                     });
+                      // Remueve la clase 'active-link' de todos los LIs de submenú
+                     mainNavList.querySelectorAll('li ul li').forEach(li => {
+                         li.classList.remove('active-link');
+                     });
+
+
+                     // Añade la clase 'active-link' solo al LI padre del enlace clickeado
+                     link.parentElement.classList.add('active-link');
+                     console.log(`Link clicked: ${link.textContent}. Marked as active.`); // Debugging
+
+                     // Si es un enlace con submenú, asegúrate de que el padre tenga la clase active
+                     // para que el submenú se quede abierto si se hace clic en el enlace principal
+                     // (Aunque la lógica de toggle ya maneja esto, es redundancia útil)
+                     if (link.parentElement.classList.contains('has-submenu')) {
+                          link.parentElement.classList.add('active');
+                     }
+                     // Si el enlace clickeado está dentro de un submenú, asegúrate de que sus padres `.has-submenu` estén abiertos
+                      let parentSubmenu = link.closest('.has-submenu');
+                       while(parentSubmenu) {
+                           parentSubmenu.classList.add('active');
+                            parentSubmenu = parentSubmenu.parentElement.closest('.has-submenu');
+                       }
+
+                 });
+             });
+
+             // ** Script para Development Links (Mostrarmensaje) **
+             console.log("Setting up development links"); // Debugging
+             developmentLinks.forEach(link => {
+                 link.addEventListener('click', function(e) {
+                     e.preventDefault();
+                     const message = link.dataset.message || 'Esta funcionalidad está en desarrollo.';
+                     alert(message);
+                     console.log(`Development link clicked: ${link.textContent}. Message: "${message}"`); // Debugging
+                      // Asegúrate de que los submenús se cierren al hacer clic en estos enlaces también
+                      mainNavList.querySelectorAll('.has-submenu.active').forEach(openItem => {
+                           openItem.classList.remove('active');
+                           console.log(`Closed submenu due to development link click: ${openItem.querySelector('a').textContent}`); // Debugging
+                      });
+                      // Asegúrate de desmarcar cualquier enlace activo al hacer clic en estos enlaces de desarrollo
+                       mainNavList.querySelectorAll('li.active-link').forEach(activeLi => {
+                           activeLi.classList.remove('active-link');
+                       });
+                 });
+             });
+
+             // --- Script para la última página visitada (movido y ajustado) ---
+             // Esta lógica ya se agregó al inicio del DOMContentLoaded
+             console.log("Last visited page logic is handled at the beginning."); // Debugging
+
+        }); // End of DOMContentLoaded
     </script>
+
 </body>
 </html>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-tYVtCVlYatP4ruoOpQqvsTh9exdqVD0yBIlnZZ+8jWyuJV3+1zIzyG7rvNDkNRkkQ+GG5CLiflCQIbOby+nHVSg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* --- Aquí va tu código CSS --- */
+        /* --- Estilos CSS --- */
         body {
             font-family: sans-serif;
             margin: 0;
@@ -36,342 +36,54 @@
             margin-top: 0;
         }
 
-        #usuarios-conectados {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-top: 10px;
+        /* Estilos para la sección de Fecha y Hora */
+        #seccion-fecha-hora {
+             /* Puedes ajustar el tamaño y la ubicación si es necesario */
+             grid-column: span 1; /* Ocupa solo una columna */
+             text-align: center;
+             background-color: #e9ecef; /* Un fondo suave */
         }
 
-        #seccion-links {
+        #seccion-fecha-hora h2 {
+             border-bottom: none; /* Elimina el borde si no lo quieres aquí */
+             padding-bottom: 0;
+             margin-bottom: 5px;
+             font-size: 1.2em;
+             color: #555;
+        }
+
+        #fecha-hora-actual {
+             font-size: 1.1em;
+             font-weight: bold;
+             color: #007bff; /* Color azul para la fecha y hora */
+        }
+
+
+        /* Estilos para la sección de Enlaces Externos */
+         #seccion-enlaces-externos {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
+         #seccion-enlaces-externos h2 {
+             margin-bottom: 10px;
+         }
 
-        #seccion-links h2 {
-            margin-bottom: 10px;
-        }
+        /* Estilos para la sección de Información del Sistema */
+         #info-sistema ul {
+             list-style: none;
+             padding: 0;
+         }
+         #info-sistema li {
+             margin-bottom: 5px;
+         }
 
-        #seccion-links a {
-            display: block;
-            padding: 10px 15px;
-            background-color: #e9ecef;
-            color: #495057;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
 
-        #seccion-links a:hover {
-            background-color: #dee2e6;
-        }
-
-        #actualizacion-sistema {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #estado-actualizacion {
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
-
-        #btn-actualizar-sistema {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #btn-actualizar-sistema:hover {
-            background-color: #1e7e34;
-        }
-
-        #contenedor-noticias ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        #contenedor-noticias li {
-            margin-bottom: 8px;
-        }
-
-        #contenedor-noticias li a { /* Estilo específico para los links dentro de la sección Nuevos Sistemas */
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            display: flex; /* Para alinear icono y texto */
-            align-items: center; /* Centrar verticalmente */
-            gap: 8px; /* Espacio entre el icono y el texto */
-            padding: 8px 0; /* Añadir un poco de padding vertical */
-        }
-
-        #contenedor-noticias li a:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-
-        #publicar-comentario {
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #publicar-comentario textarea {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
-            margin-bottom: 0;
-        }
-
-        #publicar-comentario-acciones {
-            /* Se quitarán los estilos de flex y centrado */
-        }
-
-        #subir-archivo {
-            background-color: white; /* Fondo blanco o muy claro */
-            color: #495057; /* Texto negro o gris oscuro (color de texto estándar de Bootstrap) */
-            border: 1px solid #ced4da; /* Borde gris delgado (borde estándar de los inputs de Bootstrap) */
-            padding: 0.375rem 0.75rem; /* Padding estándar de Bootstrap */
-            border-radius: 0.25rem; /* Esquinas ligeramente redondeadas (radio de borde estándar de Bootstrap) */
-            cursor: pointer;
-            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            font-size: 0.95em;
-            display: inline-block;
-            text-align: left;
-            text-decoration: none;
-            white-space: nowrap;
-            overflow: hidden;
-            width: calc(100% - 22px);
-            margin-bottom: 10px;
-        }
-
-        #subir-archivo:hover {
-            background-color: #e9ecef; /* Un tono gris claro al pasar el ratón */
-            border-color: #adb5bd;
-        }
-
-        #botones-publicar-limpiar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #btn-publicar {
-            background-color: #00a79d;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-            font-size: 1em;
-        }
-
-        #btn-publicar:hover {
-            background-color: #008c84;
-            transform: scale(1.03);
-        }
-
-        #btn-limpiar-muro {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-            font-size: 1em;
+        /* Estilos para las secciones de Soporte y Quejas/Reclamos */
+        /* Aplicamos un estilo general a los enlaces dentro de cualquier sección MAIN que quede */
+        main section a {
             display: flex;
             align-items: center;
-            gap: 5px;
-        }
-
-        #btn-limpiar-muro:hover {
-            background-color: #c9302c;
-            transform: scale(1.03);
-        }
-
-        .publicacion {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .publicacion-contenido {
-            flex-grow: 1;
-        }
-
-        .publicacion-media {
-            margin-top: 10px;
-            max-width: 100%;
-            height: auto;
-        }
-
-        .publicacion-media.video {
-            width: 100%;
-            max-height: 400px;
-        }
-
-        .reacciones {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .reacciones button {
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ccc;
-            padding: 8px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .reacciones button:hover {
-            background-color: #e0e0e0;
-            transform: scale(1.05);
-        }
-
-        .reacciones button[data-reaccion="meGusta"] {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-
-        .reacciones button[data-reaccion="meGusta"]:hover {
-            background-color: #0056b3;
-        }
-
-        .reacciones button[data-reaccion="meEncanta"] {
-            background-color: #dc3545;
-            color: white;
-            border-color: #dc3545;
-        }
-
-        .reacciones button[data-reaccion="meEncanta"]:hover {
-            background-color: #c82333;
-        }
-
-        .comentarios-seccion {
-            margin-top: 10px;
-            padding-left: 15px;
-            border-left: 3px solid #eee;
-        }
-
-        .comentario {
-            padding: 8px 0;
-            border-bottom: 1px dashed #eee;
-        }
-
-        .comentario:last-child {
-            border-bottom: none;
-        }
-
-        .agregar-comentario {
-            margin-top: 10px;
-        }
-
-        .agregar-comentario input[type="text"] {
-            width: calc(100% - 82px);
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-right: 5px;
-        }
-
-        .agregar-comentario button {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .agregar-comentario button:hover {
-            background-color: #5a6268;
-        }
-
-        /* --- Estilos CSS Llamativos --- */
-        .publicidad-anuncio {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .publicidad-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-
-        .publicidad-link:hover {
-            background-color: #0056b3;
-        }
-
-        #rastrear-btn {
-            padding: 12px 25px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
-        }
-
-        #rastrear-btn:hover {
-            background-color: #1e7e34;
-            transform: scale(1.05);
-        }
-
-        #resultado-rastreo {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #008000;
-        }
-
-        /* --- Estilo para el input de número de celular --- */
-        #numero-rastrear {
-            padding: 10px;
-            border: 2px solid #007bff; /* Borde azul más grueso */
-            border-radius: 5px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
-        }
-
-        #numero-rastrear:focus {
-            border-color: #0056b3; /* Oscurecer el borde al enfocar */
-            outline: none; /* Quitar el outline predeterminado del navegador */
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Añadir una sombra suave al enfocar */
-        }
-
-        /* --- Estilos para los links con iconos --- */
-        main > section a {
-            display: block;
             padding: 8px 15px;
             color: #337ab7; /* Un color azul más tradicional para enlaces */
             text-decoration: none;
@@ -381,127 +93,52 @@
             border: 1px solid transparent; /* Borde transparente por defecto */
         }
 
-        main > section a:hover {
+        main section a:hover {
             background-color: #d9edf7; /* Fondo azul claro al pasar el ratón */
             color: #23527c; /* Color del texto más oscuro al pasar el ratón */
             border-color: #bce8f1; /* Borde azul claro al pasar el ratón */
         }
 
-        main > section a i {
+        main section a i {
             margin-right: 8px; /* Espacio entre el icono y el texto */
-            color: #5cb85c; /* Un color verde para los iconos (puedes ajustarlo) */
+             /* Color del icono puede variar según la sección */
         }
 
-        /* Estilos específicos para algunos enlaces si es necesario */
-        #seccion-links a i {
-            color: #007bff; /* Icono de enlace en la sección de enlaces necesarios */
-        }
+        /* Estilos específicos para los iconos en diferentes secciones */
+         #seccion-enlaces-externos a i {
+             color: #007bff; /* Iconos de enlaces externos (azul) */
+         }
+         #soportes a i {
+             color: #f0ad4e; /* Iconos de soporte (naranja) */
+         }
+         #quejas-reclamos a i {
+             color: #d9534f; /* Icono de quejas (rojo) */
+         }
 
-        #soportes a i {
-            color: #f0ad4e; /* Iconos de soporte en color naranja */
-        }
 
-        #quejas-reclamos a i {
-            color: #d9534f; /* Icono de quejas y reclamos en rojo */
-        }
-
-        #saber-mas a i {
-            color: #5bc0de; /* Icono de saber más en celeste */
-        }
     </style>
 </head>
 <body>
     <main>
-        <section id="usuarios-conectados">
-            <h2>Conectados</h2>
-            <div id="contador-usuarios" style="margin-left: 130px;">0</div>
+
+         <section id="seccion-enlaces-externos">
+             <h2>Enlaces Necesarios</h2>
+             <a href="https://www.entel.pe/consultas-gsma/" target="_blank"><i class="fas fa-search"></i> Consultas GSMA</a>
+             <a href="https://consulta.portabilidad.pe/" target="_blank"><i class="fas fa-exchange-alt"></i> Consulta Portabilidad</a>
+             <a href="https://checatuimei.renteseg.osiptel.gob.pe/consultaIMEI.xhtml" target="_blank"><i class="fas fa-mobile-alt"></i> Checa Tu IMEI</a>
+             <a href="https://sibdem.osiptel.gob.pe/" target="_blank"><i class="fas fa-link"></i> Sibdem</a>
+         </section>
+
+         <section id="seccion-fecha-hora">
+            <h2>Fecha y Hora Actual</h2>
+            <div id="fecha-hora-actual"></div>
         </section>
 
-        <section id="seccion-links">
-            <h2>Enlaces Necesarios</h2>
-            <a href="https://consulta.portabilidad.pe/"><i class="fas fa-link"></i> Consulta portabilidad</a>
-            <a href="#"><i class="fas fa-link"></i> ISolution</a>
-            <a href="#"><i class="fas fa-link"></i> Everis</a>
-             <a href="#"><i class="fas fa-link"></i> Otros</a>
-            </section>
 
-        <section id="actualizacion-sistema">
-            <h2>Actualización del Sistema</h2>
-            <div id="estado-actualizacion">Verificando...</div>
-            <button id="btn-actualizar-sistema">Actualizar Ahora</button>
-        </section>
-
-        <section id="nuevos-sistemas">
-            <h2>Sistemas Desarrollados</h2>
-            <div id="contenedor-noticias">
-                </div>
-        </section>
-
-        <section id="muro-interactivo">
-            <h2>Discuciones</h2>
-            <div id="publicar-comentario">
-                <textarea placeholder="¿Qué estás pensando?"></textarea>
-                <input type="file" id="subir-archivo" class="form-control" accept="image/*, video/*">
-                <div id="botones-publicar-limpiar">
-                    <button id="btn-publicar" class="btn btn-primary">Publicar</button>
-                    <button id="btn-limpiar-muro"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </div>
-            <div id="muro-publicaciones">
-                </div>
-        </section>
     </main>
 
     <main>
-        <section id="publicidad">
-            <h2>Publicidad</h2>
-            <div class="publicidad-anuncio">
-                <p>¡Oferta especial por tiempo limitado!</p>
-                <h3>Producto Increíble</h3>
-                <a href="#" class="publicidad-link"><i class="fas fa-bullhorn"></i> ¡Descúbrelo ahora!</a>
-            </div>
-        </section>
-        <section id="hacking">
-            <h2>Hacking</h2>
-            <p>Información sobre seguridad informática y herramientas de pentesting.</p>
-            <ul>
-                <li><a href="#"><i class="fas fa-skull-crossbones"></i> Artículo sobre Ethical Hacking</a></li>
-                <li>Herramienta: PYTHON</li>
-            </ul>
-        </section>
-        <section id="cursos">
-            <h2>Cursos</h2>
-            <p>Listado de cursos disponibles.</p>
-            <ul>
-                <li><a href="#"><i class="fas fa-book-open"></i> Curso de Desarrollo Web</a></li>
-                <li><a href="#"><i class="fas fa-book-open"></i> Curso de Marketing Digital</a></li>
-                <li><a href="#"><i class="fas fa-book-open"></i> Curso de Ciencia de Datos</a></li>
-            </ul>
-        </section>
-        <section id="paginas-alternativas">
-            <h2>Páginas Alternativas</h2>
-            <p>Enlaces a sitios web con contenido similar o complementario.</p>
-            <ul>
-                <li><a href="#"><i class="fas fa-external-link-alt"></i> Sistema en Desarrollo</a></li>
-                <li><a href="#"><i class="fas fa-external-link-alt"></i> Plataformas IA</a></li>
-            </ul>
-        </section>
-        <section id="rastreo-gps">
-            <h2>Rastreo GPS Interactivo de Números de Celular</h2>
-            <p>Introduce un número de celular para el rastreo:</p>
-            <input type="tel" id="numero-rastrear" class="form-control mb-2" placeholder="Ej: +519XXXXXXXX">
-            <button id="rastrear-btn" class="btn">Rastrear Número</button>
-            <div id="resultado-rastreo"></div>
-            <p class="mt-2"><small><strong>Nota:</strong> No uses Rastreo GPS real.</small></p>
-        </section>
-    </main>
-
-    <main>
-        <section id="saber-mas">
-            <h2>Saber Más</h2>
-            <p>Descubre más sobre nuestra plataforma y sus funcionalidades. Visita nuestra sección de <a href="#"><i class="fas fa-info-circle"></i> Acerca de Nosotros</a>.</p>
-        </section>
-        <section id="info-sistema">
+         <section id="info-sistema">
             <h2>Información del Sistema</h2>
             <ul>
                 <li>Versión del Sistema: 12.5.0</li>
@@ -509,292 +146,51 @@
                 <li>Última Actualización: 15 de Abril de 2025</li>
             </ul>
         </section>
-        <section id="soportes">
+
+         <section id="soportes">
             <h2>Soporte</h2>
-            <p>¿Necesitas ayuda? Consulta nuestras <a href="#"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a>  <a href="#"><i class="fas fa-envelope"></i> Contacta con Soporte</a>.</p>
-          
+            <p>¿Necesitas ayuda? Consulta nuestras <a href="#"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a> o <a href="#"><i class="fas fa-envelope"></i> Contacta con Soporte</a>.</p>
         </section>
-        <section id="quejas-reclamos">
+
+         <section id="quejas-reclamos">
             <h2>Quejas y Reclamos</h2>
             <p>Si tienes alguna queja o reclamo, por favor, completa nuestro <a href="#"><i class="fas fa-exclamation-triangle"></i> Formulario de Quejas y Reclamos</a>.</p>
         </section>
-        <section id="redes-sociales">
-            <h2>Redes Sociales</h2>
-            <a href="#" title="Facebook" style="margin-right: 10px;"><i class="fab fa-facebook"> FACEBOOK</i></a>
-            <a href="#" title="TikTok" style="margin-right: 10px;"><i class="fab fa-tiktok"> TIK TOK</i></a>
-            <a href="#" title="WhatsApp" style="margin-right: 10px;"><i class="fab fa-whatsapp"> WHATSAPP</i></a>
-            <a href="#" title="Messenger" style="margin-right: 10px;"><i class="fab fa-facebook-messenger"> MESSENGER</i></a>
-            <a href="#" title="Instagram" style="margin-right: 10px;"><i class="fab fa-instagram"> INSTAGRAM</i></a>
-            <p class="mt-2">Contacto del creador: <a href="tel:+[Número de teléfono]">+51 990793845</a></p>
-        </section>
+
     </main>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" integrity="sha512-VK2vYemTmOBdQcvvmNIgmBFF/oGagUk/vc/hXdGgLg+Jem/jwJT4UVjZ1g+gVQCSDnhHHn0xjNdKmfMnMlKMKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        /* --- Aquí va tu código JavaScript --- */
+        /* --- Código JavaScript --- */
         document.addEventListener('DOMContentLoaded', () => {
-            const contadorUsuariosElement = document.getElementById('contador-usuarios');
-            const btnActualizarSistema = document.getElementById('btn-actualizar-sistema');
-            const contenedorNoticiasElement = document.getElementById('contenedor-noticias');
-            const btnPublicar = document.getElementById('btn-publicar');
-            const muroPublicacionesElement = document.getElementById('muro-publicaciones');
-            const textareaComentario = document.querySelector('#publicar-comentario textarea');
-            const subirArchivoInput = document.getElementById('subir-archivo');
-            const estadoActualizacionElement = document.getElementById('estado-actualizacion');
-            const btnLimpiarMuro = document.getElementById('btn-limpiar-muro');
-            const rastrearBtn = document.getElementById('rastrear-btn');
-            const resultadoRastreoDiv = document.getElementById('resultado-rastreo');
-            const numeroRastrearInput = document.getElementById('numero-rastrear');
+            // Referencia al elemento donde se mostrará la fecha y hora
+            const fechaHoraActualElement = document.getElementById('fecha-hora-actual');
 
-            let contadorUsuarios = 0;
-            let publicaciones = cargarPublicaciones(); // Cargar publicaciones desde localStorage
 
-            // --- Datos de Nuevos Sistemas ---
-            const nuevosSistemas = [
-                { title: 'Sistema Hotelera', link: '#' },
-                { title: 'Plataforma de Restaurante', link: '#' },
-                { title: 'Sistema de Ventas', link: '#' },
-                { title: 'Sistema De Identifiacion Face Id', link: '#' },
-                { title: 'Sistema Local Store', link: '#' },
-                { title: 'Redes Sociales locales', link: '#' },
-                { title: 'Sistema de Tienda Online', link: '#' },
-                { title: 'En Desarrollo', link: '#' },
-            ];
+            // --- Script para mostrar Fecha y Hora ---
+            function actualizarFechaHora() {
+                const ahora = new Date();
+                const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
 
-            function mostrarNuevosSistemas() {
-                contenedorNoticiasElement.innerHTML = '';
-                if (nuevosSistemas.length > 0) {
-                    const listaSistemas = document.createElement('ul');
-                    nuevosSistemas.forEach(sistema => {
-                        const listItem = document.createElement('li');
-                        const link = document.createElement('a');
-                        link.href = sistema.link;
-                        link.innerHTML = `<i class="fas fa-globe"></i> ${sistema.title}`;
-                        link.target = '_blank';
-                        listItem.appendChild(link);
-                        listaSistemas.appendChild(listItem);
-                    });
-                    contenedorNoticiasElement.appendChild(listaSistemas);
-                } else {
-                    contenedorNoticiasElement.textContent = 'No hay nuevos sistemas disponibles.';
+                // Usamos 'es-PE' para formato en español de Perú, incluyendo la zona horaria si es relevante
+                // Opcional: Puedes quitar 'timeZone' si quieres la hora local del navegador del usuario
+                const fechaFormateada = ahora.toLocaleDateString('es-PE', opcionesFecha);
+                const horaFormateada = ahora.toLocaleTimeString('es-PE', opcionesHora);
+
+                if (fechaHoraActualElement) {
+                    fechaHoraActualElement.textContent = `${fechaFormateada}, ${horaFormateada}`;
                 }
             }
 
-            mostrarNuevosSistemas();
+            // Llama la función una vez al cargar y luego cada segundo
+            actualizarFechaHora();
+            setInterval(actualizarFechaHora, 1000);
 
-            // --- Detección de Usuarios Conectados ---
-            function actualizarContadorUsuarios(incrementar = true) {
-                if (incrementar) {
-                    contadorUsuarios++;
-                } else if (contadorUsuarios > 0) {
-                    contadorUsuarios--;
-                }
-                contadorUsuariosElement.textContent = contadorUsuarios;
-            }
 
-            setInterval(() => actualizarContadorUsuarios(Math.random() > 0.5), 5000);
-
-            // --- Actualización del Sistema ---
-            async function verificarActualizacion() {
-                try {
-                    const respuesta = await new Promise(resolve => setTimeout(() => {
-                        const disponible = Math.random() > 0.7;
-                        resolve({ disponible, version: '22.5.0' });
-                    }, 2000));
-
-                    if (respuesta.disponible) {
-                        estadoActualizacionElement.textContent = `Actualización disponible (Versión ${respuesta.version})`;
-                        estadoActualizacionElement.style.color = 'green';
-                        btnActualizarSistema.style.display = 'block';
-                    } else {
-                        estadoActualizacionElement.textContent = 'El sistema está actualizado.';
-                        estadoActualizacionElement.style.color = 'gray';
-                        btnActualizarSistema.style.display = 'none';
-                    }
-                } catch (error) {
-                    estadoActualizacionElement.textContent = 'Error al verificar la actualización.';
-                    estadoActualizacionElement.style.color = 'red';
-                    btnActualizarSistema.style.display = 'none';
-                    console.error("Error al verificar la actualización:", error);
-                }
-            }
-
-            btnActualizarSistema.addEventListener('click', () => {
-                window.location.reload();
-            });
-
-            verificarActualizacion();
-            setInterval(verificarActualizacion, 3600000);
-
-            // --- Muro Interactivo ---
-            btnPublicar.addEventListener('click', () => {
-                const texto = textareaComentario.value.trim();
-                const archivo = subirArchivoInput.files[0];
-                const username = localStorage.getItem('username') || 'Usuario Anónimo'; // Obtener username de localStorage
-
-                if (texto || archivo) {
-                    publicarComentario(username, texto, archivo);
-                    textareaComentario.value = '';
-                    subirArchivoInput.value = ''; // Limpiar el input de archivo
-                }
-            });
-
-            btnLimpiarMuro.addEventListener('click', () => {
-                publicaciones = [];
-                guardarPublicaciones();
-                mostrarPublicaciones();
-            });
-
-            function publicarComentario(username, texto, archivo) {
-                const nuevaPublicacion = {
-                    id: Date.now(),
-                    usuario: username,
-                    texto: texto,
-                    reacciones: { meGusta: 0, meEncanta: 0, meAsombra: 0 },
-                    comentarios: [],
-                    mediaUrl: null,
-                    mediaType: null
-                };
-
-                if (archivo) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        nuevaPublicacion.mediaUrl = e.target.result;
-                        nuevaPublicacion.mediaType = archivo.type.startsWith('image/') ? 'image' : 'video';
-                        publicaciones.unshift(nuevaPublicacion);
-                        guardarPublicaciones();
-                        mostrarPublicaciones();
-                    };
-                    reader.readAsDataURL(archivo);
-                } else {
-                    publicaciones.unshift(nuevaPublicacion);
-                    guardarPublicaciones();
-                    mostrarPublicaciones();
-                }
-            }
-
-            function mostrarPublicaciones() {
-                muroPublicacionesElement.innerHTML = '';
-                if (publicaciones.length > 0) {
-                    publicaciones.forEach(publicacion => {
-                        const divPublicacion = document.createElement('div');
-                        divPublicacion.classList.add('publicacion');
-                        let mediaElement = '';
-                        if (publicacion.mediaUrl) {
-                            if (publicacion.mediaType === 'image') {
-                                mediaElement = `<img src="${publicacion.mediaUrl}" alt="Imagen adjunta" class="publicacion-media">`;
-                            } else if (publicacion.mediaType === 'video') {
-                                mediaElement = `<video src="${publicacion.mediaUrl}" class="publicacion-media video" controls></video>`;
-                            }
-                        }
-                        divPublicacion.innerHTML = `
-                            <div class="publicacion-contenido">
-                                <p><strong>${publicacion.usuario}:</strong> ${publicacion.texto}</p>
-                                ${mediaElement}
-                                <div class="reacciones" data-publicacion-id="${publicacion.id}">
-                                    <button class="btn-reaccion" data-reaccion="meGusta"><i class="fas fa-thumbs-up"></i> (${publicacion.reacciones.meGusta})</button>
-                                    <button class="btn-reaccion" data-reaccion="meEncanta"><i class="fas fa-heart"></i> (${publicacion.reacciones.meEncanta})</button>
-                                    <button class="btn-comentar" data-publicacion-id="${publicacion.id}"><i class="fas fa-comment"></i> <span id="comentario-count-${publicacion.id}">${publicacion.comentarios.length}</span> Comentarios</button>
-                                </div>
-                                <div class="comentarios-seccion" id="comentarios-${publicacion.id}" style="display: none;">
-                                    <h4>Comentarios</h4>
-                                    <div id="lista-comentarios-${publicacion.id}">
-                                        ${publicacion.comentarios.map(comentario => `<div class="comentario">${comentario.usuario}: ${comentario.texto}</div>`).join('')}
-                                    </div>
-                                    <div class="agregar-comentario">
-                                        <input type="text" placeholder="Escribe un comentario" id="input-comentario-${publicacion.id}">
-                                        <button class="btn-enviar-comentario" data-publicacion-id="${publicacion.id}"><i class="fas fa-paper-plane"></i> Enviar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        muroPublicacionesElement.appendChild(divPublicacion);
-                    });
-
-                    const botonesReaccion = document.querySelectorAll('.btn-reaccion');
-                    botonesReaccion.forEach(boton => {
-                        boton.addEventListener('click', function() {
-                            const publicacionId = parseInt(this.parentNode.dataset.publicacionId);
-                            const reaccion = this.dataset.reaccion;
-                            actualizarReaccion(publicacionId, reaccion);
-                        });
-                    });
-
-                    const botonesComentar = document.querySelectorAll('.btn-comentar');
-                    botonesComentar.forEach(boton => {
-                        boton.addEventListener('click', function() {
-                            const publicacionId = parseInt(this.dataset.publicacionId);
-                            const comentariosSeccion = document.getElementById(`comentarios-${publicacionId}`);
-                            comentariosSeccion.style.display = comentariosSeccion.style.display === 'none' ? 'block' : 'none';
-                        });
-                    });
-
-                    const botonesEnviarComentario = document.querySelectorAll('.btn-enviar-comentario');
-                    botonesEnviarComentario.forEach(boton => {
-                        boton.addEventListener('click', function() {
-                            const publicacionId = parseInt(this.dataset.publicacionId);
-                            const inputComentario = document.getElementById(`input-comentario-${publicacionId}`);
-                            const textoComentario = inputComentario.value.trim();
-                            if (textoComentario) {
-                                agregarComentario(publicacionId, textoComentario);
-                                inputComentario.value = '';
-                            }
-                        });
-                    });
-
-                } else {
-                    muroPublicacionesElement.textContent = 'No hay publicaciones aún.';
-                }
-            }
-
-            function actualizarReaccion(publicacionId, tipoReaccion) {
-                const publicacion = publicaciones.find(p => p.id === publicacionId);
-                if (publicacion) {
-                    publicacion.reacciones[tipoReaccion]++;
-                    guardarPublicaciones();
-                    mostrarPublicaciones();
-                }
-            }
-
-            function agregarComentario(publicacionId, texto) {
-                const publicacion = publicaciones.find(p => p.id === publicacionId);
-                if (publicacion) {
-                    const username = localStorage.getItem('username') || 'Usuario Anónimo';
-                    publicacion.comentarios.push({ usuario: username, texto: texto });
-                    guardarPublicaciones();
-                    mostrarPublicaciones();
-                }
-            }
-
-            function guardarPublicaciones() {
-                localStorage.setItem('publicaciones', JSON.stringify(publicaciones));
-            }
-
-            function cargarPublicaciones() {
-                const publicacionesGuardadas = localStorage.getItem('publicaciones');
-                return publicacionesGuardadas ? JSON.parse(publicacionesGuardadas) : [];
-            }
-
-            // Simulación de rastreo GPS
-            if (rastrearBtn) {
-                rastrearBtn.addEventListener('click', () => {
-                    const numero = numeroRastrearInput.value;
-                    if (numero) {
-                        resultadoRastreoDiv.textContent = `Rastreando el número ${numero}...`;
-                        // Simulación de la respuesta después de un tiempo
-                        setTimeout(() => {
-                            const ubicacionSimulada = `Ubicación simulada: Latitud -13.1639, Longitud -74.2239 (Ayacucho, Perú)`;
-                            resultadoRastreoDiv.textContent = ubicacionSimulada;
-                        }, 2000); // Simula una espera de 2 segundos
-                    } else {
-                        resultadoRastreoDiv.textContent = 'Por favor, introduce un número de celular.';
-                    }
-                });
-            }
-
-            // Cargar y mostrar publicaciones iniciales
-            mostrarPublicaciones();
         });
     </script>
+
 </body>
 </html>

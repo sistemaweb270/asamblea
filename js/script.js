@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const body = document.body;
     const backgroundImages = [
-        'icon/1.jpg'
+        ''
         
         // Agrega aquí las rutas relativas de tus otras dos imágenes
     ];
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const date = now.toLocaleDateString();
                     botReply = `La fecha actual es: ${date}`;
                 } else {
-                    botReply = 'No puedo Traducir lo que me escribiste.. mi creador esta en Desarrollo';
+                    botReply = 'Pregunta Otra Cosa';
                 }
 
                 setTimeout(() => {
