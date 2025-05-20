@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="icon/login.ico" type="image/x-icon">
+
+    <style>
+        /* Restablecimiento básico y box-sizing para una mejor responsividad */
+        *, *::before, *::after {
+            box-sizing: border-box; /* Incluye padding y border en el ancho/alto total */
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Habilita Flexbox para el body */
+            background-color: #385179;
+            flex-direction: column; /* Apila los elementos verticalmente */
+            min-height: 100vh; /* Asegura que el body ocupe al menos el 100% del alto del viewport */
+            background-size: cover; /* Asegura que la imagen de fondo cubra todo el fondo */
+            background-position: center; /* Centra la imagen de fondo */
+            transition: background-image 0.9s ease-in-out; /* Opcional: Transición suave al cambiar la imagen */
+            align-items: center; /* Centra los contenedores horizontalmente dentro del flex container */
+            justify-content: center; /* Centra los contenedores verticalmente dentro del flex container (cuando hay espacio) */
+            position: relative; /* Necesario para posicionar elementos fijos/absolutos dentro */
+            padding: 15px; /* Pequeño padding general para evitar que el contenido se pegue a los bordes */
+        }
+
+        /* Custom styles for the login container using Bootstrap conventions */
+        .login-container {
+            background-color:#fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Ocupa todo el ancho disponible */
+            max-width: 400px; /* Pero no más de 400px en pantallas grandes */
+            /* ¡Cambio crucial para el centrado vertical! */
+            margin: auto; /* Centra el contenedor horizontal y verticalmente dentro del flex container (body) */
+            z-index: 1; /* Asegura que esté sobre otros elementos si hay solapamiento */
+            position: relative; /* Necesario si z-index se aplica */
+            display: block !important; /* Forzar la visibilidad del contenedor de login */
+        }
+
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 2em; /* Tamaño de fuente relativo */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho */
+            background-color: #fff;
+            color: black;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Animated Login Button Style */
+        #login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745; /* Green background */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1em; /* Tamaño de fuente relativo */
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: color 0.3s ease-in-out;
+            display: flex; /* Use flexbox to align icon and text */
+            align-items: center;
+            justify-content: center; /* Center content horizontally */
+        }
+
+        #login-button i {
+             margin-right: 8px; /* Space between icon and text */
+        }
+
+        #login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.7s ease-in-out;
+            z-index: -1;
+        }
+
+        #login-button:hover::before {
+            left: 100%;
+        }
+
+        #login-button:hover {
+             background-color: #218838; /* Darker green on hover */
+        }
+
+        .login-container p {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .login-container p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-container p a:hover {
+            text-decoration: underline;
+        }
+
+        /* Chat Box Styles */
+        .chat-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 90vw; /* Ocupa el 90% del ancho de la ventana */
+            max-width: 350px; /* Máximo 350px */
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed; /* Posición fija en la pantalla */
+            z-index: 1000; /* Asegura que esté encima de la mayoría de los elementos */
+            flex-direction: column; /* Asegura que los hijos se apilen verticalmente */
+            bottom: 80px; /* Distancia desde abajo */
+            right: 20px; /* Distancia desde la derecha */
+            /* Propiedades para la animación de visibilidad.
+               Inicialmente, para que esté visible, eliminamos el 'transform' y 'opacity' inicial.
+               Si quieres la animación, deberás añadir y quitar la clase 'visible' con JS.
+            */
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            /* transform: translateX(100%);  <-- COMENTADO para que sea visible por defecto */
+            /* opacity: 0;                 <-- COMENTADO para que sea visible por defecto */
+            /* pointer-events: none;       <-- COMENTADO para que sea interactuable por defecto */
+            display: flex; /* <-- Asegura que el chatbox siempre sea un flex container visible */
+        }
+        
+        /* Regla para ocultar el chat box por defecto (anteriormente) - AHORA COMENTADA/ELIMINADA */
+        /* #chat-box { display: none; } */
+
+        /* Clase para mostrar el chat box (añadida/quitada con JS si implementas animación) */
+        /* Si usas esta clase para mostrar/ocultar con JS, entonces las propiedades
+           'transform', 'opacity', y 'pointer-events' del '.chat-box' deberían estar
+           en esta clase '.chat-box.visible' y el '.chat-box' debería tener 'display: none;'
+           y las propiedades iniciales de ocultamiento.
+           Por ahora, dejo el chatbox visible por defecto, y si quieres la animación,
+           tendrás que modificar el JS y reintroducir estas reglas de CSS.
+        */
+        .chat-box.hidden-by-js { /* Nueva clase para ocultar si se gestiona por JS */
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+            display: none; /* Asegura que no ocupe espacio cuando está oculto */
+        }
+
+
+        .chat-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer; /* Indica que el header es clickeable (opcional, para cerrar/minimizar) */
+        }
+
+        .chat-body {
+            padding: 15px;
+            max-height: 200px; /* Limit height and enable scrolling */
+            overflow-y: auto;
+            border-bottom: 1px solid #eee;
+            flex-grow: 1; /* Permite que el cuerpo crezca si hay espacio */
+            display: flex; /* Añadido display flex para alinear mensajes */
+            flex-direction: column; /* Apila los mensajes verticalmente */
+        }
+
+        .bot-message, .user-message {
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            word-wrap: break-word; /* Rompe palabras largas para evitar desbordamiento */
+            max-width: 85%; /* Limita el ancho del mensaje */
+            font-size: 0.95em; /* Tamaño de fuente relativo */
+        }
+
+        .bot-message {
+            background-color: #e9ecef;
+            align-self: flex-start; /* Alinea los mensajes del bot a la izquierda */
+        }
+        .user-message {
+            background-color: #d4edda; /* Color para mensajes del usuario */
+            align-self: flex-end; /* Alinea los mensajes del usuario a la derecha */
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background-color: #f8f9fa;
+            align-items: center; /* Centra verticalmente el input y el botón */
+        }
+
+        .chat-input input[type="text"] {
+            flex-grow: 1; /* Permite que el input crezca para ocupar el espacio */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: black;
+            margin-right: 8px;
+            box-sizing: border-box;
+            font-size: 0.9em; /* Tamaño de fuente relativo */
+        }
+
+        .chat-input button {
+            padding: 8px 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0; /* Evita que el botón se encoja */
+            width: auto; /* Permite que el ancho se ajuste al contenido */
+            min-width: 65px; /* Ajustado min-width si es necesario, puede variar */
+            font-size: 0.9em; /* Tamaño de fuente relativo */
+        }
+
+        .chat-input button i {
+             margin-right: 5px; /* Espacio entre icono y texto en el botón de enviar */
+        }
+
+        .chat-input button:hover {
+            background-color: #218838;
+        }
+
+        /* Estilos para el icono de soporte flotante */
+        .support-icon {
+            position: fixed; /* Posición fija en la pantalla */
+            bottom: 20px; /* Distancia desde abajo */
+            right: 20px; /* Distancia desde la derecha */
+            background-color: #007bff; /* Color de fondo */
+            color: white; /* Color del icono */
+            width: 50px; /* Tamaño del círculo */
+            height: 50px;
+            border-radius: 50%; /* Forma circular */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px; /* Tamaño del icono */
+            cursor: pointer; /* Indica que es clickeable */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra */
+            z-index: 1001; /* Asegura que esté encima del chat box cuando este oculto */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Transición para hover */
+        }
+
+        .support-icon:hover {
+            background-color: #0056b3; /* Color de fondo al pasar el mouse */
+            transform: scale(1.05); /* Pequeño efecto al pasar el mouse */
+        }
+        /* Ocultar el icono de soporte cuando el chat box está abierto (requiere JS) */
+        .support-icon.hidden {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 0.3s, opacity 0.3s ease;
+        }
+        /* Regla para mostrar el icono de cerrar y ocultar el de chat */
+        .support-icon.chat-open .fa-headset {
+            display: none;
+        }
+        .support-icon.chat-open .fa-times {
+            display: inline-block; /* Muestra el icono de cerrar */
+        }
+        /* Asegurarse de que el icono de chat esté visible por defecto */
+        .support-icon .fa-headset {
+            display: inline-block;
+        }
+        /* Asegurarse de que el icono de cerrar esté oculto por defecto */
+        .support-icon .fa-times {
+            display: none;
+        }
+
+        /* --- Estilos para el Circle Bar (animación de carga) --- */
+        .circle-bar-container {
+            display: none; /* Oculto por defecto */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute; /* Posiciona sobre el login */
+            top: 50%; /* Centrado vertical */
+            left: 50%; /* Centrado horizontal */
+            transform: translate(-50%, -50%); /* Ajuste final para centrado perfecto */
+            z-index: 2; /* Asegura que esté por encima del login-container */
+            background-color: transparent; /* Fondo semitransparente */
+            
+        }
+
+        .circle-bar {
+            width: 100px;
+            height: 100px;
+            border: 20px solid #116fe8; /* Light grey */
+            border-top: 20px solid #e1dada; /* Blue */
+            border-radius: 50%;
+            animation: spin 2s linear infinite; /* Animación de giro */
+            margin-bottom: 15px;
+        }
+
+        .circle-bar-text {
+            font-size: 1.2em;
+            color: BLACK;
+            font-weight: bold;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Media Queries para responsividad --- */
+
+        /* Para pantallas más pequeñas (teléfonos) */
+        @media (max-width: 576px) {
+            body {
+                padding: 10px; /* Reduce el padding general del body */
+            }
+
+            .login-container {
+                padding: 20px;
+                margin-top: 0; 
+                margin-bottom: 20px; /* Mantener un margen inferior si es necesario */
+            }
+
+            .login-container h1 {
+                font-size: 1.8em;
+            }
+
+            #login-button {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            .chat-box {
+                width: 95vw; /* Ocupa casi todo el ancho */
+                right: 10px; /* Márgenes más pequeños */
+                bottom: 70px;
+            }
+
+            .chat-body {
+                max-height: 180px; /* Ajusta la altura del chat */
+            }
+
+            .chat-input input[type="text"],
+            .chat-input button {
+                font-size: 0.85em;
+                padding: 6px;
+            }
+
+            .support-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        /* Para pantallas medianas (tabletas) */
+        @media (min-width: 577px) and (max-width: 992px) {
+            .login-container {
+                max-width: 380px; /* Un poco más flexible */
+            }
+
+            .chat-box {
+                max-width: 320px;
+            }
+        }
+
+        /* Para pantallas grandes (desktops) */
+        @media (min-width: 993px) {
+            .login-container {
+                max-width: 400px; /* Vuelve al tamaño original en pantallas grandes */
+            }
+
+            .chat-box {
+                max-width: 350px; /* Vuelve al tamaño original */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="support-icon" id="support-icon">
+        <i class="fas fa-headset"></i> <i class="fas fa-times"></i>
+    </div>
+
+    <div class="login-container" id="login-container">
+        <h1>Iniciar Sesión</h1>
+        <div class="form-group">
+            <label for="username"><i class="fas fa-user"></i> Nombre</label>
+            <input type="text" id="username" name="username" required placeholder="Ingresa Tu Nombre Aqui">
+        </div>
+        <div class="form-group">
+            <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+            <input type="password" id="password" name="password" readonly placeholder="Aleatorio">
+        </div>
+        <div class="form-group">
+            <button type="button" id="generate-password" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Generar Contraseña</button>
+        </div>
+        <button id="login-button" class="btn btn-success">
+            <i class="fas fa-sign-in-alt"></i> Iniciar Sesion
+        </button>
+        <p><a href="https://wa.link/ktne4u" target="_blank" style="font-size: 15px;"><i class="fab fa-whatsapp"></i> Contactar al soporte</a></p>
+            
+    </div>
+
+    <div class="circle-bar-container" id="circle-bar-container">
+        <div class="circle-bar"></div>
+        <p class="circle-bar-text">Iniciando Sistema...</p>
+    </div>
+
+    <div class="chat-box" id="chat-box">
+        <div class="chat-header"><i class="fas fa-comments"></i> Soporte Online</div>
+        <div class="chat-body" id="chat-messages">
+            <p class="bot-message">Bienvenido! ¿Cual es tu Consulta?</p>
+        </div>
+        <div class="chat-input">
+            <input type="text" style="width:10px;" id="user-input" placeholder="Escribe tu pregunta...">
+            <button id="send-button"><i class="fas fa-paper-plane"></i> Enviar</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="alertModalLabel"><i class="fas fa-exclamation-triangle"></i> Error de Inicio de Sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Problemas para iniciar sesión, vuelva a intentar por favor
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Volver Intentar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>
