@@ -1,102 +1,152 @@
-
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema en Mantenimiento</title>
-    <link rel="icon" href="icon/man.ico" type="image/x-icon">
+    <title>Mantenimiento del Sistema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <style>
+        /* Restablecimiento básico y box-sizing */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #161c23;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente moderna y limpia */
+            background-color: #e2e8f0; /* Un gris azulado suave */
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            min-height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
             margin: 0;
             text-align: center;
-            overflow: hidden; /* Para las animaciones de fondo */
+            color: #333; /* Color de texto general */
+            padding: 20px; /* Padding para evitar que el contenido se pegue a los bordes en móviles */
         }
+
         .container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 90%;
-            position: relative;
-            z-index: 10;
+            background-color: #ffffff; /* Fondo blanco para el contenedor principal */
+            padding: 50px;
+            border-radius: 12px; /* Bordes más suaves */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada para un efecto flotante */
+            max-width: 600px; /* Ancho máximo para el contenedor */
+            width: 100%; /* Ocupa el 100% del ancho disponible */
         }
+
         h1 {
-            color: #0056b3;
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            color: #d9534f; /* Rojo de advertencia/atención */
+            margin-bottom: 25px;
+            font-size: 2.5em; /* Tamaño de fuente más grande para el título */
+            font-weight: 700; /* Negrita */
         }
+
         p {
-            font-size: 1.2em;
-            line-height: 1.6;
-            margin-bottom: 30px;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.15em; /* Tamaño de fuente ligeramente más grande para los párrafos */
+            line-height: 1.6; /* Espaciado entre líneas para mejor lectura */
         }
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Gris claro para el borde del loader */
+            border-top: 8px solid #d9534f; /* Rojo del tema para la parte animada */
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 2s linear infinite;
-            margin: 20px auto;
+            width: 70px; /* Tamaño un poco más grande */
+            height: 70px;
+            animation: spin 1.5s linear infinite; /* Animación de giro más rápida */
+            margin: 30px auto; /* Centrar y añadir espacio */
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        /* Animación de fondo: partículas de trabajo */
-        .working-particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 1;
+        #progress-message {
+            color: #666; /* Un gris ligeramente más oscuro */
+            font-size: 1em;
+            margin-top: 15px;
+            font-style: italic; /* Mensaje en cursiva */
         }
-        .particle {
-            position: absolute;
-            background-color: rgba(0, 123, 255, 0.1);
-            border-radius: 50%;
-            animation: floatUp 15s infinite ease-in-out;
-            opacity: 0;
-        }
-        /* Variaciones para las partículas */
-        .particle:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-duration: 12s; animation-delay: 0s; }
-        .particle:nth-child(2) { width: 30px; height: 30px; left: 30%; animation-duration: 15s; animation-delay: 2s; }
-        .particle:nth-child(3) { width: 25px; height: 25px; left: 50%; animation-duration: 10s; animation-delay: 4s; }
-        .particle:nth-child(4) { width: 35px; height: 35px; left: 70%; animation-duration: 18s; animation-delay: 6s; }
-        .particle:nth-child(5) { width: 22px; height: 22px; left: 90%; animation-duration: 13s; animation-delay: 8s; }
 
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-50vh) scale(1.2); opacity: 0; }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .loader {
+                width: 50px;
+                height: 50px;
+                border-width: 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                border-radius: 8px;
+            }
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+            p {
+                font-size: 0.95em;
+                margin-bottom: 15px;
+            }
+            .loader {
+                margin: 20px auto;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="working-particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
     <div class="container">
-        <h1>🛠️ Error de sistema, Servidores Con problemas 🛠️</h1>
-        <div class="spinner"></div>
-        <p>Estamos trabajando Para Resolver el problema en poco Tiempo. ¡Agradecemos tu paciencia!</p>
-        <p>Por favor, espere un momento o inténtelo de nuevo más tarde.</p>
+        <h1>¡Estamos trabajando!</h1>
+        <p>Nuestro sistema está actualmente en mantenimiento para aplicar mejoras importantes y asegurar un mejor rendimiento. Agradecemos tu paciencia y comprensión.</p>
+        
+        <div class="loader"></div>
+        
+        <p id="progress-message">Estimamos que el servicio estará de vuelta en unos minutos. Por favor, vuelve a intentar más tarde.</p>
+        
+        <p style="font-size: 0.9em; color: #888; margin-top: 40px;">
+            Para actualizaciones o soporte, puedes visitarnos en nuestras redes sociales: <br>
+            <a href="#" style="color: #d9534f; text-decoration: none;"><i class="fab fa-twitter"></i> Twitter</a> | 
+            <a href="#" style="color: #d9534f; text-decoration: none;"><i class="fab fa-facebook"></i> Facebook</a>
+        </p>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const messages = [
+                    "Verificando la estabilidad del sistema...",
+                    "Optimizando las bases de datos...",
+                    "Aplicando las últimas actualizaciones de seguridad...",
+                    "Realizando pruebas finales...",
+                    "¡Ya casi estamos listos!"
+                ];
+                let currentIndex = 0;
+                const progressMessageElement = document.getElementById('progress-message');
+
+                // Función para actualizar el mensaje
+                function updateProgressMessage() {
+                    progressMessageElement.textContent = messages[currentIndex];
+                    currentIndex = (currentIndex + 1) % messages.length; // Cicla a través de los mensajes
+                }
+
+                // Actualizar el mensaje cada 5 segundos
+                setInterval(updateProgressMessage, 5000);
+
+                // Establecer el primer mensaje al cargar la página
+                updateProgressMessage(); 
+            });
+        </script>
     </div>
 </body>
 </html>
