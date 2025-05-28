@@ -1,219 +1,310 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de PDF</title>
-    <link rel="stylesheet" href="../css/style.css"> <link rel="stylesheet" href="../css/generador_pdf.css"> <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generador de Reporte de IMEI</title>
+  <!-- Bootstrap y Font Awesome para íconos (opcional) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    /* ===============================
+   ANIMACIONES
+   =============================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.4.0/pdf-lib.min.js"></script>
+/* ===============================
+   ESTILOS PARA TARJETAS Y FORMULARIO
+   =============================== */
+body {
+  font-family: Arial, sans-serif;
+  background-color: transparent;
+  padding: 30px;
+}
 
-    <style>
-        /* Estilos específicos para los botones con iconos */
-        /* Puedes añadir esto en tu generador_pdf.css si prefieres separarlo */
-        .btn {
-            display: inline-flex; /* Usa flexbox para alinear contenido */
-            align-items: center; /* Centra verticalmente el icono y el texto */
-            gap: 5px; /* Añade un espacio entre el icono y el texto */
-        }
-         /* Si usas Bootstrap 5+, 'gap' funciona nativamente con display: flex */
-         /* Si usas Bootstrap 4, podrías necesitar añadir margin-right al icono: */
-         /* .btn i { margin-right: 5px; } */
+.pdf-generator-container {
+  background: transparent;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  max-width: 900px;
+  margin: 0 auto;
+}
 
-        /* Asegura que el upload-section use flexbox para alinear elementos */
-        .upload-section {
-            display: flex;
-            align-items: center; /* Alinea verticalmente */
-            margin-bottom: 15px; /* Espacio entre secciones de subida */
-            flex-wrap: wrap; /* Permite que los elementos salten de línea en pantallas pequeñas */
-        }
+h2 {
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 25px;
+}
 
-        .upload-section label:first-child { /* Estilo para el label del nombre del campo */
-            margin-right: 10px;
-            /* Ajusta min-width si necesitas que los labels de los nombres de campo tengan un ancho fijo para una alineación perfecta de los botones */
-            min-width: 200px; /* Un ancho fijo para alinear */
-            text-align: right; /* Alinea el texto a la derecha */
-            flex-shrink: 0; /* Evita que se encoja */
-            /* Puedes ajustar el width o flex-basis si prefieres un layout basado en porcentajes */
-            /* width: 30%; */
-        }
+/* Tarjeta para Datos del Cliente */
+.card {
+  background: transparent;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  text-align: center;
+  /* Aplicamos la animación */
+  animation: fadeInUp 0.6s ease-out both;
+}
 
-        .upload-section .btn { /* Estilo para el label que actúa como botón */
-             flex-shrink: 0; /* Evita que el botón se encoja */
-             /* Puedes ajustar el width o flex-basis */
-             /* width: auto; */
-        }
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 25px;
+  width: 100%;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  font-size: 18px;
+    text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Contenedor de tarjetas para subir archivos (disposición horizontal) */
+.upload-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Tarjetas individuales para cada archivo */
+.upload-card {
+  background: transparent;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  width: 250px;
+  text-align: center;
+  /* Añadimos la animación */
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.upload-card label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.file-upload-text {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.btn-primary {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-success {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-top: 20px;
+  color: #fff;
+}
 
 
-        /* Ajuste para el span que muestra el nombre del archivo */
-        .file-upload-text {
-            margin-left: 10px; /* Espacio entre el botón y el nombre del archivo */
-            font-style: italic;
-            color: #555;
-            flex-grow: 1; /* Permite que el nombre del archivo ocupe el espacio disponible */
-            max-width: 250px; /* Limita el ancho si es necesario */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        /* Estilo para el indicador de progreso */
-        .upload-progress {
-            margin-left: 10px;
-            font-weight: bold;
-            color: green; /* Color para el texto de progreso */
-            min-width: 80px; /* Asegura espacio para "100% - Completo" */
-            text-align: left; /* Asegura alineación del texto de progreso */
-            flex-shrink: 0; /* Evita que se encoja */
-        }
-
-        /* Ajuste para el botón principal */
-        #exportar_pdf {
-             margin-top: 20px; /* Espacio encima del botón */
-             width: auto; /* Permite que el botón se ajuste a su contenido */
-        }
-
-
-    </style>
+  </style>
+  <!-- Incluir PDF-lib (asegúrate que se carga antes de usarlo) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Incluir html2canvas -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Incluir Font Awesome JS (sin integrity para evitar error) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-    <div class="pdf-generator-container" style="margin-top: -60px;">
-        <h2>Generador de Reporte de IMEI</h2>
-        <div class="form-row">
-            <label for="nombre_cliente">Nombre del Cliente:</label>
-            <input type="text" id="nombre_cliente" name="nombre_cliente" required>
-        </div>
-        <div class="form-row">
-            <label for="tienda">Tienda:</label>
-            <select id="tienda">
-                <option value="TPF TC AYACASAMBLEA2">TPF TC AYACASAMBLEA2</option>
-                <option value="TPF AYACUCHO 1">TPF AYACUCHO 1</option>
-                <option value="TPF HUANCAVELICA">TPF HUANCAVELICA</option>
-            </select>
-        </div>
-
-        <h3>Subir Archivos (en el orden especificado):</h3>
-        <div class="upload-section">
-            <label for="osiptel_capture">1. Captura de página de Osiptel:</label>
-            <input type="file" id="osiptel_capture" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
-            <label class="btn btn-primary" for="osiptel_capture"><i class="fas fa-folder-open"></i> Seleccionar archivo</label>
-            <span id="osiptel_capture-filename" class="file-upload-text"></span>
-             <span id="osiptel_capture-progress" class="upload-progress"></span> </div>
-        <div class="upload-section">
-            <label for="transferencia_osiptel">2. Captura de transferencia a Osiptel:</label>
-            <input type="file" id="transferencia_osiptel" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
-            <label class="btn btn-primary" for="transferencia_osiptel"><i class="fas fa-folder-open"></i> Seleccionar archivo</label>
-            <span id="transferencia_osiptel-filename" class="file-upload-text"></span>
-             <span id="transferencia_osiptel-progress" class="upload-progress"></span> </div>
-        <div class="upload-section">
-            <label for="foto_imei_fisico">3. Foto IMEI físico:</label>
-            <input type="file" id="foto_imei_fisico" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
-            <label class="btn btn-primary" for="foto_imei_fisico"><i class="fas fa-folder-open"></i> Seleccionar archivo</label>
-            <span id="foto_imei_fisico-filename" class="file-upload-text"></span>
-             <span id="foto_imei_fisico-progress" class="upload-progress"></span> </div>
-        <div class="upload-section">
-            <label for="foto_imei_logico">4. Foto IMEI lógico:</label>
-            <input type="file" id="foto_imei_logico" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
-            <label class="btn btn-primary" for="foto_imei_logico"><i class="fas fa-folder-open"></i> Seleccionar archivo</label>
-            <span id="foto_imei_logico-filename" class="file-upload-text"></span>
-             <span id="foto_imei_logico-progress" class="upload-progress"></span> </div>
-        <div class="upload-section">
-            <label for="solicitud_abonado">5. Solicitud de cuestionamiento presentado por el abonado:</label>
-            <input type="file" id="solicitud_abonado" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
-            <label class="btn btn-primary" for="solicitud_abonado"><i class="fas fa-folder-open"></i> Seleccionar archivo</label>
-            <span id="solicitud_abonado-filename" class="file-upload-text"></span>
-             <span id="solicitud_abonado-progress" class="upload-progress"></span> </div>
-        <div class="upload-section">
-            <label for="validacion_identidad">6. Validación de identidad:</label>
-            <input type="file" id="validacion_identidad" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
-            <label class="btn btn-primary" for="validacion_identidad"><i class="fas fa-folder-open"></i> Seleccionar archivo</label>
-            <span id="validacion_identidad-filename" class="file-upload-text"></span>
-             <span id="validacion_identidad-progress" class="upload-progress"></span> </div>
-        <div class="upload-section">
-            <label for="captura_gsma">7. Captura GSMA:</label>
-            <input type="file" id="captura_gsma" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
-            <label class="btn btn-primary" for="captura_gsma"><i class="fas fa-folder-open"></i> Seleccionar archivo</label>
-            <span id="captura_gsma-filename" class="file-upload-text"></span>
-             <span id="captura_gsma-progress" class="upload-progress"></span> </div>
-
-        <button type="button" id="exportar_pdf" class="btn btn-success"><i class="fas fa-file-pdf"></i> UNIR Y CONVERTIR PDF</button>
-        <div id="mensaje_exportacion"></div>
+  <div class="pdf-generator-container">
+    <h2>Reporte de IMEI</h2>
+    <!-- Tarjeta de Datos del Cliente -->
+    <div class="card">
+      <div class="form-group">
+        <label for="nombre_cliente">Nombre del Cliente:</label>
+        <input type="text" id="nombre_cliente" name="nombre_cliente" required>
+      </div>
+      <div class="form-group">
+        <label for="tienda">Tienda:</label>
+        <select id="tienda" name="tienda">
+          <option value="TPF TC AYACASAMBLEA2">TPF TC AYACASAMBLEA2</option>
+          <option value="TPF AYACUCHO 1">TPF AYACUCHO 1</option>
+          <option value="TPF HUANCAVELICA">TPF HUANCAVELICA</option>
+        </select>
+      </div>
     </div>
 
-    <script src="../js/generador_pdf.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const fileInputs = document.querySelectorAll('.upload-section input[type="file"]');
+    <!-- Contenedor de Tarjetas para Subida de Archivos -->
+    <div class="upload-container">
+      <div class="upload-card">
+        <label for="osiptel_capture">Captura de página de Osiptel:</label>
+        <input type="file" id="osiptel_capture" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
+        <label class="btn btn-primary" for="osiptel_capture">
+          <i class="fas fa-folder-open"></i>Archivo
+        </label>
+        <span id="osiptel_capture-filename" class="file-upload-text"></span>
+        <span id="osiptel_capture-progress" class="file-upload-text"></span>
+      </div>
+      <div class="upload-card">
+        <label for="transferencia_osiptel">Captura de transferencia a Osiptel:</label>
+        <input type="file" id="transferencia_osiptel" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
+        <label class="btn btn-primary" for="transferencia_osiptel">
+          <i class="fas fa-folder-open"></i> Archivo
+        </label>
+        <span id="transferencia_osiptel-filename" class="file-upload-text"></span>
+        <span id="transferencia_osiptel-progress" class="file-upload-text"></span>
+      </div>
+      <div class="upload-card">
+        <label for="foto_imei_fisico">Foto IMEI físico:</label>
+        <input type="file" id="foto_imei_fisico" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
+        <label class="btn btn-primary" for="foto_imei_fisico">
+          <i class="fas fa-folder-open"></i>Archivo
+        </label>
+        <span id="foto_imei_fisico-filename" class="file-upload-text"></span>
+        <span id="foto_imei_fisico-progress" class="file-upload-text"></span>
+      </div>
+      <div class="upload-card">
+        <label for="foto_imei_logico">Foto IMEI lógico:</label>
+        <input type="file" id="foto_imei_logico" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
+        <label class="btn btn-primary" for="foto_imei_logico">
+          <i class="fas fa-folder-open"></i> Archivo
+        </label>
+        <span id="foto_imei_logico-filename" class="file-upload-text"></span>
+        <span id="foto_imei_logico-progress" class="file-upload-text"></span>
+      </div>
+      <div class="upload-card">
+        <label for="solicitud_abonado">Solicitud de cuestionamiento:</label>
+        <input type="file" id="solicitud_abonado" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
+        <label class="btn btn-primary" for="solicitud_abonado">
+          <i class="fas fa-folder-open"></i> Archivo
+        </label>
+        <span id="solicitud_abonado-filename" class="file-upload-text"></span>
+        <span id="solicitud_abonado-progress" class="file-upload-text"></span>
+      </div>
+      <div class="upload-card">
+        <label for="validacion_identidad">Validación de identidad:</label>
+        <input type="file" id="validacion_identidad" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
+        <label class="btn btn-primary" for="validacion_identidad">
+          <i class="fas fa-folder-open"></i> Archivo
+        </label>
+        <span id="validacion_identidad-filename" class="file-upload-text"></span>
+        <span id="validacion_identidad-progress" class="file-upload-text"></span>
+      </div>
+      <div class="upload-card">
+        <label for="captura_gsma">Captura GSMA:</label>
+        <input type="file" id="captura_gsma" class="d-none" accept=".pdf, .png, .jpg, .jpeg">
+        <label class="btn btn-primary" for="captura_gsma">
+          <i class="fas fa-folder-open"></i> Archivo
+        </label>
+        <span id="captura_gsma-filename" class="file-upload-text"></span>
+        <span id="captura_gsma-progress" class="file-upload-text"></span>
+      </div>
+    </div>
 
-            fileInputs.forEach(input => {
-                const filenameDisplay = document.getElementById(input.id + '-filename');
-                const progressDisplay = document.getElementById(input.id + '-progress'); // Obtener el span de progreso
-
-                // Limpiar el texto de progreso inicialmente
-                if (progressDisplay) {
-                    progressDisplay.textContent = '';
-                }
-
-
-                input.addEventListener('change', () => {
-                    const file = input.files[0]; // Obtener el archivo seleccionado
-
-                    if (file) {
-                        filenameDisplay.textContent = file.name; // Mostrar el nombre del archivo
-                        if (progressDisplay) { // Asegurarse de que el elemento de progreso exista
-                            progressDisplay.textContent = '0%'; // Resetear y mostrar 0% al inicio de la carga
-                            progressDisplay.style.color = 'orange'; // Color inicial del progreso
-                        }
-
-
-                        const reader = new FileReader();
-
-                        // Evento que se dispara durante la lectura del archivo
-                        reader.addEventListener('progress', (event) => {
-                            if (event.lengthComputable && progressDisplay) { // Asegurarse de que el elemento de progreso exista y sea computable
-                                const percentLoaded = (event.loaded / event.total) * 100;
-                                progressDisplay.textContent = `${percentLoaded.toFixed(0)}%`; // Mostrar el porcentaje
-                            } else if (progressDisplay) {
-                                 progressDisplay.textContent = 'Cargando...'; // Mensaje si no es computable (raro para archivos locales)
-                                  progressDisplay.style.color = '#555';
-                            }
-                        });
-
-                        // Evento que se dispara cuando la lectura del archivo ha terminado (con éxito o error)
-                        reader.addEventListener('loadend', () => {
-                            if (progressDisplay) { // Asegurarse de que el elemento de progreso exista
-                                 if (reader.error) {
-                                     progressDisplay.textContent = 'Error';
-                                      progressDisplay.style.color = 'red';
-                                      console.error('Error al leer el archivo:', reader.error);
-                                 } else {
-                                    progressDisplay.textContent = 'Completo'; // Indicar que la carga está completa
-                                    progressDisplay.style.color = 'green'; // Cambiar color a verde
-                                 }
-
-                                // Aquí podrías almacenar el resultado de la lectura (reader.result)
-                                // para usarlo más tarde en generador_pdf.js
-                                // Es probable que necesites adaptar generador_pdf.js
-                                // para que no lea los archivos directamente, sino que use los datos
-                                // que guardas aquí después de la lectura.
-                            }
-                        });
-
-                        // Iniciar la lectura del archivo como URL de datos (Base64)
-                        // Si generador_pdf.js necesita ArrayBuffer, usa reader.readAsArrayBuffer(file);
-                        reader.readAsDataURL(file);
-
-
-                    } else {
-                        filenameDisplay.textContent = ''; // Limpiar nombre si no hay archivo
-                        if (progressDisplay) { // Asegurarse de que el elemento de progreso exista
-                            progressDisplay.textContent = ''; // Limpiar progreso
-                        }
-                    }
-                });
+    <!-- Botón para Exportar PDF -->
+    <button type="button" id="exportar_pdf" class="btn btn-success">
+      <i class="fas fa-file-pdf"></i>CONVERTIR PDF
+    </button>
+    <div id="mensaje_exportacion" style="margin-top: 15px; text-align: center; font-weight: bold;"></div>
+  </div>
+    
+  <!-- Script para subir archivos y mostrar progreso -->
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const fileInputs = document.querySelectorAll(".upload-card input[type='file']");
+      fileInputs.forEach(input => {
+        const filenameDisplay = document.getElementById(input.id + "-filename");
+        const progressDisplay = document.getElementById(input.id + "-progress");
+        const buttonLabel = document.querySelector(`label[for="${input.id}"]`);
+        if (progressDisplay) progressDisplay.textContent = "";
+        input.addEventListener("change", () => {
+          const file = input.files[0];
+          if (file) {
+            filenameDisplay.textContent = file.name;
+            if (progressDisplay) {
+              progressDisplay.textContent = "0%";
+              progressDisplay.style.color = "orange";
+            }
+            buttonLabel.style.backgroundColor = "orange";
+            buttonLabel.style.color = "#fff";
+            const reader = new FileReader();
+            reader.addEventListener("progress", (event) => {
+              if (event.lengthComputable && progressDisplay) {
+                const percentLoaded = (event.loaded / event.total) * 100;
+                progressDisplay.textContent = `${percentLoaded.toFixed(0)}%`;
+              } else if (progressDisplay) {
+                progressDisplay.textContent = "Cargando...";
+                progressDisplay.style.color = "#555";
+              }
             });
+            reader.addEventListener("loadend", () => {
+              if (progressDisplay) {
+                if (reader.error) {
+                  progressDisplay.textContent = "Error";
+                  progressDisplay.style.color = "red";
+                  console.error("Error al leer el archivo:", reader.error);
+                } else {
+                  progressDisplay.textContent = "Archivo subido OK";
+                  progressDisplay.style.color = "white";
+                  buttonLabel.style.backgroundColor = "green";
+                }
+              }
+            });
+            reader.readAsDataURL(file);
+          } else {
+            filenameDisplay.textContent = "";
+            if (progressDisplay) progressDisplay.textContent = "";
+            buttonLabel.style.backgroundColor = "#007bff";
+            buttonLabel.style.color = "#fff";
+          }
         });
-    </script>
+      });
+    });
+  </script>
+
+
+<script src="../js/generador_pdf.js"></script>
 </body>
 </html>

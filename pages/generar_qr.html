@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Código QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: transparent;
+            text-align: center;
+            padding: 30px;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        input[type="text"], input[type="file"] {
+            width: 90%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .upload-wrapper {
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .upload-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .upload-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #003d82);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            padding: 12px 18px;
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: linear-gradient(to right, #0056b3, #003d82);
+        }
+        #archivoNombre {
+            font-size: 14px;
+            color: #007bff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        #qrContainer {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Generador de Código QR</h2>
+        <input type="text" id="texto" placeholder="Introduce un texto o URL">
+        <button onclick="generarQR()">Generar QR</button>
+
+        <h3>Generar QR para archivo</h3>
+        <div class="upload-wrapper">
+            <button class="upload-btn">📤 Seleccionar Archivo</button>
+            <input type="file" id="archivo" accept="image/*,application/pdf" onchange="mostrarArchivo()">
+        </div>
+        <p id="archivoNombre"></p>
+        <button onclick="generarQRArchivo()">Generar QR de Archivo</button>
+
+        <div id="qrContainer"></div>
+    </div>
+
+    <script>
+        function generarQR() {
+            let texto = document.getElementById("texto").value.trim();
+            let qrContainer = document.getElementById("qrContainer");
+            qrContainer.innerHTML = "";
+
+            if (texto === "") {
+                alert("Por favor, introduce un texto o URL válido.");
+                return;
+            }
+
+            new QRCode(qrContainer, {
+                text: texto,
+                width: 200,
+                height: 200
+            });
+        }
+
+        function mostrarArchivo() {
+            let archivo = document.getElementById("archivo").files[0];
+            let archivoNombre = document.getElementById("archivoNombre");
+
+            if (archivo) {
+                archivoNombre.textContent = "Archivo seleccionado: " + archivo.name;
+            } else {
+                archivoNombre.textContent = "";
+            }
+        }
+
+        function generarQRArchivo() {
+            let archivo = document.getElementById("archivo").files[0];
+            let qrContainer = document.getElementById("qrContainer");
+            qrContainer.innerHTML = "";
+
+            if (!archivo) {
+                alert("Por favor, selecciona un archivo.");
+                return;
+            }
+
+            let urlTemporal = URL.createObjectURL(archivo);
+            new QRCode(qrContainer, {
+                text: urlTemporal,
+                width: 200,
+                height: 200
+            });
+        }
+    </script>
+
+</body>
+</html>

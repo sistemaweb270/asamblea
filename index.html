@@ -31,7 +31,7 @@ body {
   margin: 0;
   padding: 0;
   /* Nuevo degradado: del naranja (#ff512f) al rosa (#dd2476) */
-  background: linear-gradient(135deg, #0d66f0, #1b6629) !important;
+  background: linear-gradient(135deg, #187df6, #cd9318) !important;"
   background-size: cover;
   background-position: center;
   display: flex;
@@ -41,7 +41,7 @@ body {
 }
 /* Contenedor del login con efecto glassmorphism y animación de aparición */
 .login-container {
-  background: var(--card-bg);
+  background:transparent;
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 40px;
@@ -67,7 +67,7 @@ body {
 .login-container h1 {
   text-align: center;
   font-size: 2rem;
-  color: var(--text);
+  color: #fff;
   margin-bottom: 25px;
   font-weight: 600;
   animation: slideDown 0.5s ease both;
@@ -85,7 +85,7 @@ body {
 
 .form-group label {
   font-weight: 600;
-  color: var(--text);
+  color: #fff;
   margin-bottom: 8px;
   display: block;
 }
@@ -112,6 +112,7 @@ body {
 .input-group {
   display: flex;
   align-items: center;
+
 }
 
 .input-group .form-control#pin {
@@ -121,6 +122,7 @@ body {
   padding: 12px;
   border: 1px solid var(--input-border);
   border-right: none;
+
   border-radius: 8px 0 0 8px;
   background: var(--input-bg);
   color: var(--text);
@@ -136,11 +138,12 @@ body {
 /* Botón de generación de PIN, en la misma línea */
 .input-group-append {
   display: flex;
+  align-items: center;
 }
 
 .input-group-append button {
   height: 48px;
-  padding: 0 16px;
+  padding: 0 10px;
   border: 1px solid var(--input-border);
   border-left: none;
   border-radius: 0 8px 8px 0;
@@ -182,7 +185,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(45deg, var(--success), var(--success-dark));
+  background: linear-gradient(135deg, #f35608, #53f308) !important;
   font-size: 1.1em;
   width: 100%;
   padding: 14px;
@@ -390,7 +393,7 @@ body {
     <!-- AQUI VA TODO DE FORMULARIO DE LOGIN -->
 
 <div class="login-container" id="login-container">
-  <h1>Iniciar Sesión</h1>
+  <h1>ACCESO AL SISTEMA</h1>
 
   <!-- Campo para NOMBRES: el usuario ingresa solo sus nombres -->
   <div class="form-group">
@@ -414,9 +417,10 @@ body {
       <input type="text" id="pin" name="pin" readonly required 
              placeholder="Generar PIN" class="form-control">
       <div class="input-group-append">
-        <button type="button" id="generate-pin" class="btn btn-secondary">
-          <i class="fas fa-sync-alt"></i>
-        </button>
+        <button type="button" id="generate-pin" class="btn btn-secondary d-flex justify-content-center align-items-center">
+  <i class="fas fa-key"></i>
+</button>
+
       </div>
     </div>
   </div>
@@ -433,11 +437,9 @@ body {
     <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
   </button>
   
-  <p>
-    <a href="https://wa.link/ktne4u" target="_blank" style="font-size: 15px;">
-      <i class="fab fa-whatsapp"></i> Contactar al soporte
-    </a>
-  </p>
+
+  <p style="background:transparent; color: #fff; padding: 15px 10px; text-align: center; font-size: 0.9rem;"  > Sistema Gratuito &copy; Mayo 2025</p>
+
 </div>
 
 
@@ -450,8 +452,8 @@ body {
 <div class="modal fade modal-top" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header" style="background:#a73653;"  >
-        <h5 class="modal-title" id="alertModalLabel">Alerta General</h5>
+      <div class="modal-header" style="background:#8c2727;"  >
+        <h5 class="modal-title" id="alertModalLabel">Aviso Importante¡</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body" id="alertModalBody">

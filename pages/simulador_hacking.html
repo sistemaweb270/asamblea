@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Hacking</title>
+  <style>
+    body {
+      background: transparent;
+      color: #0f0;
+      font-family: monospace;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      width: 90%;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #terminal {
+      background: #000;
+      border: 2px solid #0f0;
+      padding: 20px;
+      height: 400px;
+      overflow-y: auto;
+      text-align: left;
+      white-space: pre-wrap;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    #startButton {
+      margin-top: 20px;
+      background: #0f0;
+      color: #000;
+      font-size: 16px;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    #startButton:hover {
+      background: #afa;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Prueba...</h1>
+    <div id="terminal"></div>
+    <button id="startButton">Inyectar</button>
+  </div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const startButton = document.getElementById('startButton');
+
+    // Simula líneas de "actividad" de hacking
+    const lines = [
+      "Iniciando simulación de hacking...",
+      "Conectando a servidor remoto [192.168.1.101]...",
+      "Estableciendo conexión segura...",
+      "Autenticación en proceso...",
+      "Descifrando contraseñas almacenadas...",
+      "Carga de datos: [==========>          ] 50%",
+      "Carga de datos: [==================>    ] 80%",
+      "Acceso concedido a la base de datos.",
+      "Extrayendo información confidencial...",
+      "Obteniendo registros de actividad...",
+      "Analizando tráfico de red...",
+      "Transfiriendo archivos secretos...",
+      "Eliminando rastros y registros del sistema...",
+      "Simulación completada con éxito.",
+      "Cierre de sesión en progreso..."
+    ];
+
+    let currentLine = 0;
+    let currentChar = 0;
+    let interval;
+
+    // Función que escribe letra por letra en el terminal
+    function typeLine() {
+      if (currentLine >= lines.length) {
+        clearInterval(interval);
+        return;
+      }
+      const line = lines[currentLine];
+      if (currentChar < line.length) {
+        terminal.textContent += line[currentChar];
+        currentChar++;
+        // Asegura que el scroll se mantenga en el final
+        terminal.scrollTop = terminal.scrollHeight;
+      } else {
+        terminal.textContent += "\n";
+        currentLine++;
+        currentChar = 0;
+      }
+    }
+
+    // Inicia la simulación y resetea el terminal
+    function startSimulation() {
+      startButton.disabled = true;
+      terminal.textContent = "";
+      currentLine = 0;
+      currentChar = 0;
+      interval = setInterval(typeLine, 50);
+    }
+
+    startButton.addEventListener("click", startSimulation);
+  </script>
+
+</body>
+</html>
