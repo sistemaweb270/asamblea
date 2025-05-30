@@ -9,6 +9,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
+/* ========================================
+   Ajustes Responsivos para Sidebar y Main Container
+======================================== */
+
+/* Para pantallas medianas (tabletas y dispositivos hasta 768px) */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;           /* Reduce el ancho del sidebar */
+    padding: 15px;          /* Ajusta los márgenes internos */
+  }
+  .main-container {
+    margin-left: 200px;     /* Actualiza el margen izquierdo para compensar la reducción */
+    padding: 15px;
+  }
+  #content-frame {
+    height: calc(100vh - 30px);  /* Ajusta la altura tomando en cuenta los nuevos paddings */
+  }
+}
+
+/* Para pantallas pequeñas (teléfonos móviles hasta 576px) */
+@media (max-width: 576px) {
+  .sidebar {
+    position: relative;     /* Vuelve al flujo normal para que se muestre en la parte superior */
+    width: 100%;            /* Toma todo el ancho de la pantalla */
+    height: auto;           /* La altura se ajusta automáticamente */
+    padding: 10px;
+    box-shadow: none;       /* Opcional: elimina la sombra para un look más plano */
+    margin-bottom: 10px;    /* Separación para que no se pegue al contenido */
+  }
+  .main-container {
+    margin-left: 0;         /* Quita el margen izquierdo al no disponer de sidebar fijo */
+    padding: 10px;
+  }
+  #content-frame {
+    height: auto;           /* Permite que el contenido se extienda según su tamaño */
+  }
+}
 
 /* ========================================
    Sidebar General

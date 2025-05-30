@@ -10,8 +10,19 @@
     <link rel="icon" href="icon/login.ico" type="image/x-icon">
 
     <style>
-    /* Variables globales para simplificar ajustes */
+   /* Configuración universal para un box-sizing consistente */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
+/* Ajuste de la tipografía de forma fluida según el viewport */
+html {
+  font-size: calc(14px + 0.5vmin);
+}
+
+/* Variables globales para simplificar ajustes */
 :root {
   --primary: #0077ff;
   --primary-dark: #005fcc;
@@ -30,23 +41,25 @@ body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
-  /* Nuevo degradado: del naranja (#ff512f) al rosa (#dd2476) */
-  background: linear-gradient(135deg, #187df6, #cd9318) !important;"
+  background: linear-gradient(135deg, #187df6, #cd9318) !important;
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  overflow-x: hidden;
 }
+
 /* Contenedor del login con efecto glassmorphism y animación de aparición */
 .login-container {
-  background:transparent;
+  background: transparent;
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 40px;
   width: 100%;
   max-width: 400px;
+  margin: 16px; /* margen adicional para evitar que se pegue a los bordes en pantallas pequeñas */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: fadeIn 0.6s ease both;
 }
@@ -108,58 +121,46 @@ body {
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
-/* Grupo para el campo de PIN y el botón de generarlo */
+/* Contenedor para campo PIN y botón (ícono de llave) */
 .input-group {
   display: flex;
-  align-items: center;
-
+  align-items: stretch; /* Asegura que ambos elementos tengan la misma altura */
+  width: 100%;
 }
 
+/* Campo de PIN */
 .input-group .form-control#pin {
-  flex: 0 0 auto;
-  width: 270px;
+  flex: 1; /* Hace que el input ocupe el espacio restante */
   height: 48px;
   padding: 12px;
   border: 1px solid var(--input-border);
-  border-right: none;
-
+  border-right: none; /* Para fundir visualmente con el botón */
   border-radius: 8px 0 0 8px;
   background: var(--input-bg);
   color: var(--text);
   transition: all 0.3s ease;
 }
 
-.input-group .form-control#pin:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-}
-
-/* Botón de generación de PIN, en la misma línea */
-.input-group-append {
-  display: flex;
-  align-items: center;
-}
-
+/* Botón que contiene la llave */
 .input-group-append button {
   height: 48px;
-  padding: 0 10px;
+  width: 48px; /* Ancho fijo para centrar el ícono */
+  padding: 0;
+  margin-top:auto;
   border: 1px solid var(--input-border);
-  border-left: none;
+  border-left: none; /* Evita duplicar el borde entre elementos */
   border-radius: 0 8px 8px 0;
   background: var(--primary);
-  margin-top: auto;
   color: #fff;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra horizontalmente el ícono */
   transition: background 0.3s ease, transform 0.1s ease;
 }
 
 .input-group-append button:hover {
   background: var(--primary-dark);
-}
-
-.input-group-append button:active {
-  transform: scale(0.98);
 }
 
 /* Botones generales dentro del formulario */
@@ -225,7 +226,7 @@ body {
   text-decoration: underline;
 }
 
-/* Media Query para dispositivos móviles */
+/* Media Query para dispositivos móviles (max-width: 480px) */
 @media screen and (max-width: 480px) {
   .login-container {
     padding: 20px;
@@ -242,138 +243,112 @@ body {
   }
 }
 
-
-      
-/* Contenedor para el spinner (circle bar) que cubre toda la pantalla y se muestra sin overlay */
+/* Contenedor para el spinner (circle bar) que cubre la pantalla */
 #circle-bar-container {
- display: none; /* Oculto por defecto */
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: absolute; /* Posiciona sobre el login */
-            top: 50%; /* Centrado vertical */
-            left: 50%; /* Centrado horizontal */
-            transform: translate(-50%, -50%); /* Ajuste final para centrado perfecto */
-            z-index: 2; /* Asegura que esté por encima del login-container */
-
-   
+  display: none; /* Oculto por defecto */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 /* Spinner circular */
 .circle-bar {
   width: 100px;
   height: 70px;
-  border: 20px solid #0d66f0; /* Color del borde */
-  border-top: 20px solid #e5e5e5; /* Color del borde superior para efecto de giro */
+  border: 20px solid #0d66f0;
+  border-top: 20px solid #e5e5e5;
   border-radius: 50%;
-  animation: spin 2s linear infinite; /* Animación de giro */
+  animation: spin 2s linear infinite;
 }
 
-/* Texto debajo del spinner (opcional) */
+/* Texto debajo del spinner */
 .circle-bar-text {
   font-size: 1.2em;
   color: black;
   font-weight: bold;
 }
 
-/* Keyframes para la animación de giro */
+/* Keyframes para la animación del spinner */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
+/* --- Media Queries adicionales para diferentes tamaños de pantalla --- */
 
+/* Teléfonos y pantallas muy pequeñas */
+@media (max-width: 576px) {
+  body {
+    padding: 10px;
+  }
+  .login-container {
+    padding: 20px;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  .login-container h1 {
+    font-size: 1.8em;
+  }
+  #login-button {
+    font-size: 1em;
+    padding: 10px;
+  }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+  .chat-input input[type="text"],
+  .chat-input button {
+    font-size: 0.85em;
+    padding: 6px;
+  }
+}
 
-        /* --- Media Queries para responsividad --- */
+/* Tabletas: entre 577px y 992px */
+@media (min-width: 577px) and (max-width: 992px) {
+  .login-container {
+    max-width: 380px;
+  }
+  .chat-box {
+    max-width: 320px;
+  }
+}
 
-        /* Para pantallas más pequeñas (teléfonos) */
-        @media (max-width: 576px) {
-            body {
-                padding: 10px; /* Reduce el padding general del body */
-            }
+/* Desktops: a partir de 993px */
+@media (min-width: 993px) {
+  .login-container {
+    max-width: 400px;
+  }
+}
 
-            .login-container {
-                padding: 20px;
-                margin-top: 0; 
-                margin-bottom: 20px; /* Mantener un margen inferior si es necesario */
-            }
-
-            .login-container h1 {
-                font-size: 1.8em;
-            }
-
-            #login-button {
-                font-size: 1em;
-                padding: 10px;
-            }
-
-          
-
-            .chat-input input[type="text"],
-            .chat-input button {
-                font-size: 0.85em;
-                padding: 6px;
-            }
-
-           
-        }
-
-        /* Para pantallas medianas (tabletas) */
-        @media (min-width: 577px) and (max-width: 992px) {
-            .login-container {
-                max-width: 380px; /* Un poco más flexible */
-            }
-
-            .chat-box {
-                max-width: 320px;
-            }
-        }
-
-        /* Para pantallas grandes (desktops) */
-        @media (min-width: 993px) {
-            .login-container {
-                max-width: 400px; /* Vuelve al tamaño original en pantallas grandes */
-            }
-
-            
-        }
-/* Clase personalizada para posicionar el modal en la parte superior */
+/* Estilos para modales */
 .modal-top .modal-dialog {
-  margin: 2rem auto 0 auto; /* 2rem desde la parte superior y centrado horizontalmente */
+  margin: 2rem auto 0 auto;
   animation: slideDownFadeIn 0.5s ease-out;
 }
 
-/* Opcional: si deseas que el modal aparezca pegado a la parte superior en pantallas mayores a 576px */
 @media (min-width: 576px) {
   .modal-top .modal-dialog {
     margin-top: 1rem;
   }
 }
 
-/* Establece un color de fondo y estilos para el contenido del modal */
 .modal-content {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-/* El título se mostrará en rojo */
 .modal-header .modal-title {
   color: #fff;
-
 }
 
-/* El contenido se mostrará en blanco */
 .modal-body {
   color: black;
 }
 
-/* Animación personalizada para el modal */
 @keyframes slideDownFadeIn {
   0% {
     opacity: 0;
@@ -384,6 +359,13 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Asegura que las imágenes se adapten al contenedor */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 
     </style>
 </head>
