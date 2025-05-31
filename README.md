@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mantenimiento en Curso - ¡Juega y Espera!</title>
+    <title>Mantenimiento en Curso</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -280,20 +280,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>¡Estamos trabajando duro!</h1>
-        <p>Nuestro sistema está actualmente en mantenimiento para aplicar mejoras importantes y asegurar un mejor rendimiento. Mientras tanto, ¡ayúdanos a resolver un pequeño rompecabezas!</p>
+        <h1>¡lo Sentimos Hay un Problema en los Servidores contacte Soporte!</h1>
+        <p>Nuestro sistema Sufrio un Error de Calculo, lo estan resolviendo!</p>
         
         <div class="loader"></div>
         
         <p id="progress-message">Estimamos que el servicio estará de vuelta en unos minutos. Por favor, vuelve a intentar más tarde.</p>
         
-        <div id="game-section" class="game-section">
-            <p id="game-message">Encuentra los pares de herramientas de desarrollo:</p>
-            <div id="game-board">
-                </div>
-            <p id="victory-message">¡Excelente trabajo! Has completado el mantenimiento Express. El sistema estará listo muy pronto.</p>
-        </div>
-
         <div class="social-links">
             Para actualizaciones o soporte, puedes visitarnos en nuestras redes sociales: <br>
             <a href="#" target="_blank"><i class="fab fa-twitter"></i> Twitter</a> | 
@@ -302,115 +295,7 @@
         </div>
 
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const gameSection = document.getElementById('game-section');
-                const gameBoard = document.getElementById('game-board');
-                const victoryMessage = document.getElementById('victory-message');
-                const progressMessageElement = document.getElementById('progress-message'); // Para los mensajes de progreso
-
-                // Muestra la sección del juego después de un breve retraso para que el usuario lea el mensaje inicial
-                setTimeout(() => {
-                    gameSection.classList.add('visible');
-                }, 2000); // Muestra el juego 2 segundos después de que la página cargue
-
-                // Array de iconos para el juego de memoria (de Font Awesome)
-                // Cada icono se duplicará para crear pares. Añade más para más dificultad.
-                const icons = [
-                    'fas fa-cogs',       // Engranajes
-                    'fas fa-bug',        // Bug
-                    'fas fa-code',       // Código
-                    'fas fa-database',   // Base de datos
-                    'fas fa-server',     // Servidor
-                    'fas fa-wrench',     // Llave inglesa
-                 
-                ];
-
-                let cards = [];
-                let flippedCards = [];
-                let matchedCards = 0;
-                let lockBoard = false; // Para evitar clicks mientras las tarjetas se voltean
-
-                function initializeGame() {
-                    // Duplicar iconos y mezclarlos
-                    cards = [...icons, ...icons]; // Crea los pares
-                    shuffle(cards); // Mezcla las tarjetas
-
-                    gameBoard.innerHTML = ''; // Limpiar el tablero si ya había un juego
-
-                    cards.forEach((icon, index) => {
-                        const cardElement = document.createElement('div');
-                        cardElement.classList.add('card');
-                        cardElement.dataset.icon = icon; // Guardar el icono en un atributo de datos
-                        cardElement.dataset.index = index; // Guardar el índice para referencias
-
-                        cardElement.innerHTML = `
-                            <div class="card-inner">
-                                <div class="card-front"><i class="fas fa-question"></i></div>
-                                <div class="card-back"><i class="${icon}"></i></div>
-                            </div>
-                        `;
-                        cardElement.addEventListener('click', flipCard);
-                        gameBoard.appendChild(cardElement);
-                    });
-
-                    victoryMessage.style.display = 'none'; // Ocultar el mensaje de victoria al inicio
-                    matchedCards = 0; // Resetear contador de cartas emparejadas
-                }
-
-                // Algoritmo de Fisher-Yates para mezclar un array
-                function shuffle(array) {
-                    for (let i = array.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [array[i], array[j]] = [array[j], array[i]];
-                    }
-                }
-
-                function flipCard() {
-                    if (lockBoard) return; // Si el tablero está bloqueado, no hacer nada
-                    if (this === flippedCards[0]) return; // Evitar clickear la misma tarjeta dos veces
-
-                    this.classList.add('flipped');
-                    flippedCards.push(this);
-
-                    if (flippedCards.length === 2) {
-                        lockBoard = true; // Bloquear el tablero
-                        checkForMatch();
-                    }
-                }
-
-                function checkForMatch() {
-                    const [firstCard, secondCard] = flippedCards;
-                    const isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
-
-                    isMatch ? disableCards() : unflipCards();
-                }
-
-                function disableCards() {
-                    const [firstCard, secondCard] = flippedCards;
-                    firstCard.classList.add('matched');
-                    secondCard.classList.add('matched');
-
-                    // Opcional: Eliminar event listeners si no quieres que se clickeen más
-                    firstCard.removeEventListener('click', flipCard);
-                    secondCard.removeEventListener('click', flipCard);
-
-                    matchedCards += 2;
-                    resetBoard();
-
-                    if (matchedCards === cards.length) {
-                        // Todas las cartas han sido emparejadas
-                        showVictoryMessage();
-                    }
-                }
-
-                function unflipCards() {
-                    setTimeout(() => {
-                        flippedCards[0].classList.remove('flipped');
-                        flippedCards[1].classList.remove('flipped');
-                        resetBoard();
-                    }, 1000); // Voltear después de 1 segundo
-                }
-
+        
                 function resetBoard() {
                     [flippedCards, lockBoard] = [[], false]; // Reiniciar variables
                 }
@@ -421,7 +306,7 @@
                     // Por ejemplo, simular que el mantenimiento ha terminado y redirigir:
                     // setTimeout(() => {
                     //     alert("¡Mantenimiento completado! El sistema está de vuelta. Redireccionando...");
-                    //     window.location.href = "tu-pagina-principal.html"; // Cambia esto a la URL de tu sitio
+                    //     window.location.href = "index.html"; // Cambia esto a la URL de tu sitio
                     // }, 3000);
                 }
 
