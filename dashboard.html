@@ -151,14 +151,19 @@
 }
 
 
-
 .user-sidebar-info {
   text-align: center;
   margin: 20px 0;
-  color: #f46108;
-  font-size: 25px;
-  font-weight: bold;
+  font-size: 30px;
+  font-weight: 1200; /* Negrita extra intensa */
+  font-family: 'Montserrat', sans-serif; /* O la tipografía que prefieras */
+  background:transparent;
+  color: #979892;
+ 
 }
+
+
+
 
 .user-avatar-circle {
   width: 130px;
@@ -637,55 +642,88 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
-
-  /* ====================================================
-     GESTIÓN DEL MODAL DE LOGOUT
-  ==================================================== */
-  if (logoutLink) {
-    logoutLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      const logoutModal = document.getElementById("logout-modal");
-      if (logoutModal) {
-        logoutModal.style.display = "block";
-      }
-    });
-  }
-  const closeLogoutModalBtn = document.getElementById("close-logout-modal");
-  const confirmLogoutButton = document.getElementById("confirm-logout");
-  const cancelButton = document.getElementById("cancel-button");
-
-  const hideLogoutModal = () => {
+/* ====================================================
+   GESTIÓN DEL MODAL DE LOGOUT
+==================================================== */
+if (logoutLink) {
+  logoutLink.addEventListener("click", (e) => {
+    e.preventDefault();
     const logoutModal = document.getElementById("logout-modal");
     if (logoutModal) {
-      logoutModal.style.display = "none";
+      logoutModal.style.display = "block";
     }
+  });
+}
+const closeLogoutModalBtn = document.getElementById("close-logout-modal");
+const confirmLogoutButton = document.getElementById("confirm-logout");
+const cancelButton = document.getElementById("cancel-button");
+
+const hideLogoutModal = () => {
+  const logoutModal = document.getElementById("logout-modal");
+  if (logoutModal) {
+    logoutModal.style.display = "none";
+  }
+};
+
+if (cancelButton) {
+  cancelButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    hideLogoutModal();
+  });
+}
+if (closeLogoutModalBtn) {
+  closeLogoutModalBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    hideLogoutModal();
+  });
+}
+if (confirmLogoutButton) {
+  confirmLogoutButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    // Limpiar datos de sesión y persistencia del menú
+    localStorage.removeItem("access-name");
+    localStorage.removeItem("font-type");
+    localStorage.removeItem("profile-image");
+    localStorage.removeItem("activeLink");
+    hideLogoutModal();
+    window.location.href = "index.html";
+  });
+}
+});
+
+/* ====================================================
+   AUTO-LOGOUT POR INACTIVIDAD
+   (Se cierra la sesión automáticamente tras 15 minutos de inactividad)
+==================================================== */
+(function() {
+  let inactivityTimeout;
+
+  // Función de cierre de sesión, igual a la del botón de confirmación
+  const autoLogout = () => {
+    localStorage.removeItem("access-name");
+    localStorage.removeItem("font-type");
+    localStorage.removeItem("profile-image");
+    localStorage.removeItem("activeLink");
+    window.location.href = "index.html";
   };
 
-  if (cancelButton) {
-    cancelButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      hideLogoutModal();
-    });
-  }
-  if (closeLogoutModalBtn) {
-    closeLogoutModalBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      hideLogoutModal();
-    });
-  }
-  if (confirmLogoutButton) {
-    confirmLogoutButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      // Limpiar datos de sesión y persistencia del menú
-      localStorage.removeItem("access-name");
-      localStorage.removeItem("font-type");
-      localStorage.removeItem("profile-image");
-      localStorage.removeItem("activeLink");
-      hideLogoutModal();
-      window.location.href = "index.html";
-    });
-  }
-});
+  // Reinicia el temporizador de inactividad
+  const resetInactivityTimeout = () => {
+    clearTimeout(inactivityTimeout);
+    // Establece 15 minutos de inactividad (900000 ms)
+    inactivityTimeout = setTimeout(autoLogout, 900000);
+  };
+
+  // Eventos que reestablecen el temporizador al detectar actividad
+  document.addEventListener("mousemove", resetInactivityTimeout);
+  document.addEventListener("keydown", resetInactivityTimeout);
+  document.addEventListener("click", resetInactivityTimeout);
+  document.addEventListener("scroll", resetInactivityTimeout);
+
+  // Inicia el temporizador al cargar la página
+  resetInactivityTimeout();
+})();
+
 
     </script>
 
