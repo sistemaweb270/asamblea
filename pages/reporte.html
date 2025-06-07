@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro y Reportes - Exportar a PDF</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  
+  <!-- FontAwesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  
+  <!-- jsPDF y html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <style>
+    /* Estilos generales para pantalla */
+    body {
+      background: transparent;
+      font-family: 'Roboto', sans-serif;
+      color: #343a40;
+      margin: 0;
+      padding: 0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-50px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    /* Contenedor del Reporte (visualización en pantalla) */
+    #reportContainer {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 20px;
+      border-radius: 8px;
+      animation: fadeIn 1s ease-in-out;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    h1 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      color: #343a40;
+      text-align: center;
+      animation: slideInDown 1s ease-out;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    h2.section-title {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      color: #000;
+      border-bottom: 2px solid #000;
+      padding-bottom: 5px;
+      animation: slideInDown 1s ease-out;
+    }
+    h2.section-title i {
+      color: #ffc107;
+      margin-right: 8px;
+    }
+    label {
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    label i {
+      color: #28a745;
+      margin-right: 4px;
+    }
+    .static-value {
+      font-size: 1.1rem;
+      margin-left: 5px;
+    }
+    table.table {
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 5px;
+      margin-top:-20px ;
+      overflow: hidden;
+    }
+    table.table tbody tr:hover {
+      background-color: rgba(209, 236, 241, 0.6);
+      transition: background-color 0.3s ease;
+    }
+    .total-row {
+      font-weight: bold;
+      background: #ffffff; /* Fondo blanco para mayor contraste en PDF */
+      color: #000;
+      border-top: 2px solid #000;
+    }
+    /* Botón de exportación */
+    #btnExport {
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #btnExport:hover {
+      transform: scale(1.05);
+      background: #0056b3 !important;
+    }
+    
+    /* ----- Estilos para impresión (basado en tu referencia) ----- */
+    @media print {
+      html, body {
+        background: #fff !important;
+        margin: 0;
+        padding: 5mm; /* Standard A4 margins */
+        -webkit-print-color-adjust: exact;
+        font-size: 13pt;
+        color: #000 !important;
+      }
+      .container {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100%;
+        padding: 0 !important;
+        border-radius: 0 !important;
+      }
+      h1 {
+        font-size: 2em;
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #000 !important;
+        text-align: center;
+        text-shadow: none;
+      }
+      h2 {
+        font-size: 1.5em;
+        margin-bottom: 8px;
+        border-bottom: none !important;
+        color: #000 !important;
+        text-align: center;
+      }
+      .section-title {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      color: #000;
+      border-bottom: 2px solid #000;
+      padding-bottom: 5px;
+      animation: slideInDown 1s ease-out;
+      }
+      label {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 1em;
+        color: #000 !important;
+        font-weight: bold;
+      }
+      .static-value {
+        display: block;
+        font-size: 1em;
+        color: #000 !important;
+        margin-left: 0;
+      }
+      table {
+         background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 5px;
+      margin-top:-20px ;
+      overflow: hidden;
+      }
+      table, th, td {
+        border: 1px solid #000 !important;
+      }
+      th, td {
+        padding: 4mm 2mm;
+        text-align: left !important;
+        color: #000 !important;
+      }
+      .total-row {
+        background-color: #fff !important;
+        color: #000 !important;
+        font-weight: bold;
+      }
+      p {
+        color: #000 !important;
+        font-size: 0.9em;
+        margin-top: 0;
+      }
+    }
+    /* ----- Fin de estilos para impresión ----- */
+  </style>
+</head>
+<body>
+  <!-- Contenedor del Reporte -->
+  <div class="container mt-5" id="reportContainer">
+    <h1>
+      <i class="fas fa-file-alt" title="Gestión de Base Asamblea"></i>
+      GESTIÓN DE BASE ASAMBLEA
+    </h1>
+    <!-- Valores fijos -->
+    <div class="row">
+      <div class="col-md-4">
+        <label title="Número total de días del mes">
+          <i class="fas fa-calendar-alt"></i> DÍAS MES:
+        </label>
+        <span class="static-value" id="diasMesValue">24</span>
+      </div>
+      <div class="col-md-4">
+        <label title="Número de días trabajados">
+          <i class="fas fa-briefcase"></i> DÍAS TRABAJADO:
+        </label>
+        <span class="static-value" id="diaTrabajadoValue">6</span>
+      </div>
+      <div class="col-md-4">
+        <label title="Diferencia entre Días Mes y Días Trabajado">
+          <i class="fas fa-stopwatch"></i> DÍAS POR TRABAJAR:
+        </label>
+        <span class="static-value" id="diaPorTrabajarValue">18</span>
+      </div>
+    </div>
+    <hr>
+    <!-- Reporte MIS_IN -->
+    <h2 class="section-title">
+      <i class="fas fa-clipboard-list" title="Reporte MIS_IN"></i>
+      MIS_IN
+    </h2>
+    <table class="table table-bordered" id="misInTable">
+      <thead class="thead-dark">
+        <tr>
+          <th>ASESOR</th>
+          <th>CUOTA</th>
+          <th>AVANCE</th>
+          <th>PROYECCIÓN</th>
+          <th>CUMPLIMIENTO %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llenará dinámicamente -->
+      </tbody>
+    </table>
+    <!-- Reporte UP_SELLING -->
+    <h2 class="section-title">
+      <i class="fas fa-bullseye" title="Reporte UP_SELLING"></i>
+      UP_SELLING
+    </h2>
+    <table class="table table-bordered" id="upSellingTable">
+      <thead class="thead-dark">
+        <tr>
+          <th>ASESOR</th>
+          <th>CUOTA UP_SELLING</th>
+          <th>AVANCE UP_SELLING</th>
+          <th>PROYECCIÓN</th>
+          <th>CUMPLIMIENTO %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llenará dinámicamente -->
+      </tbody>
+    </table>
+    <!-- Reporte ARRIBOS TOTALES -->
+    <h2 class="section-title">
+      <i class="fas fa-users" title="Arribos Totales"></i>
+      ARRIBOS TOTALES
+    </h2>
+    <table class="table table-bordered" id="arrivalsTable">
+      <thead class="thead-dark">
+        <tr>
+          <th>ASESOR</th>
+          <th>ARRIBOS TOTALES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llenará dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Botón para Exportar a PDF -->
+  <div class="row mt-3">
+    <div class="col text-center">
+      <button class="btn btn-info" id="btnExport">
+        <i class="fas fa-file-pdf"></i> Exportar PDF
+      </button>
+    </div>
+  </div>
+  
+  <!-- Lógica en JavaScript -->
+  <script>
+    // Valores fijos y datos de ejemplo
+    const diasMesStatic = 24;
+    const diaTrabajadoStatic = 6;
+    const diaPorTrabajarStatic = diasMesStatic - diaTrabajadoStatic;
+
+    let advisors = [
+      { nombre: "DAVID ESTEBAN", cuota: 18, avance: 2, arribos: 234, cuotaUpSelling: 118, avanceUpSelling: 25 },
+      { nombre: "MANUEL MARMANILLO", cuota: 18, avance: 5, arribos: 203, cuotaUpSelling: 118, avanceUpSelling: 67 },
+      { nombre: "LUIS MARTINEZ", cuota: 18, avance: 2, arribos: 154, cuotaUpSelling: 118, avanceUpSelling: 10 },
+      { nombre: "JOSE VILLAVICENCIO", cuota: 18, avance: 3, arribos: 204, cuotaUpSelling: 118, avanceUpSelling: 8 },
+      { nombre: "GIANELLA", cuota: 18, avance: 0, arribos: 20, cuotaUpSelling: 118, avanceUpSelling: 15 }
+    ];
+    
+    // Función para calcular la proyección: (avance / díaTrabajado) * díasMes
+    function calculateProjection(avance, diasMes, diaTrabajado) {
+      return diaTrabajado > 0 ? Math.round((avance / diaTrabajado) * diasMes) : 0;
+    }
+    
+    // Función para calcular el % de cumplimiento: (proyección / cuota) * 100%
+    function calculateCumplimiento(proyeccion, cuota) {
+      return cuota > 0 ? Math.round((proyeccion / cuota) * 100) + "%" : "0%";
+    }
+    
+    // Renderiza la tabla MIS_IN
+    function renderMisInTable(diasMes, diaTrabajado) {
+      const tbody = document.querySelector("#misInTable tbody");
+      tbody.innerHTML = "";
+      let totalCuota = 0, totalAvance = 0;
+      advisors.forEach(advisor => {
+        const proyeccion = calculateProjection(advisor.avance, diasMes, diaTrabajado);
+        const cumplimiento = calculateCumplimiento(proyeccion, advisor.cuota);
+        totalCuota += Number(advisor.cuota);
+        totalAvance += Number(advisor.avance);
+        tbody.innerHTML += `
+          <tr>
+            <td>${advisor.nombre}</td>
+            <td>${advisor.cuota}</td>
+            <td>${advisor.avance}</td>
+            <td>${proyeccion}</td>
+            <td>${cumplimiento}</td>
+          </tr>
+        `;
+      });
+      const totalProyeccion = calculateProjection(totalAvance, diasMes, diaTrabajado);
+      const totalCumplimiento = calculateCumplimiento(totalProyeccion, totalCuota);
+      tbody.innerHTML += `
+        <tr class="total-row">
+          <td>Total</td>
+          <td>${totalCuota}</td>
+          <td>${totalAvance}</td>
+          <td>${totalProyeccion}</td>
+          <td>${totalCumplimiento}</td>
+        </tr>
+      `;
+    }
+    
+    // Renderiza la tabla UP_SELLING
+    function renderUpSellingTable(diasMes, diaTrabajado) {
+      const tbody = document.querySelector("#upSellingTable tbody");
+      tbody.innerHTML = "";
+      let totalCuotaUp = 0, totalAvanceUp = 0;
+      advisors.forEach(advisor => {
+        const proyeccionUp = calculateProjection(advisor.avanceUpSelling, diasMes, diaTrabajado);
+        const cumplimientoUp = calculateCumplimiento(proyeccionUp, advisor.cuotaUpSelling);
+        totalCuotaUp += Number(advisor.cuotaUpSelling);
+        totalAvanceUp += Number(advisor.avanceUpSelling);
+        tbody.innerHTML += `
+          <tr>
+            <td>${advisor.nombre}</td>
+            <td>${advisor.cuotaUpSelling}</td>
+            <td>${advisor.avanceUpSelling}</td>
+            <td>${proyeccionUp}</td>
+            <td>${cumplimientoUp}</td>
+          </tr>
+        `;
+      });
+      const totalProyeccionUp = calculateProjection(totalAvanceUp, diasMes, diaTrabajado);
+      const totalCumplimientoUp = calculateCumplimiento(totalProyeccionUp, totalCuotaUp);
+      tbody.innerHTML += `
+        <tr class="total-row">
+          <td>Total</td>
+          <td>${totalCuotaUp}</td>
+          <td>${totalAvanceUp}</td>
+          <td>${totalProyeccionUp}</td>
+          <td>${totalCumplimientoUp}</td>
+        </tr>
+      `;
+    }
+    
+    // Renderiza la tabla de Arribos Totales
+    function renderArrivalsTable() {
+      const tbody = document.querySelector("#arrivalsTable tbody");
+      tbody.innerHTML = "";
+      let totalArrivals = 0;
+      advisors.forEach(advisor => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${advisor.nombre}</td>
+            <td>${advisor.arribos}</td>
+          </tr>
+        `;
+        totalArrivals += Number(advisor.arribos);
+      });
+      tbody.innerHTML += `
+        <tr class="total-row">
+          <td>Total</td>
+          <td>${totalArrivals}</td>
+        </tr>
+      `;
+    }
+    
+    // Renderiza ambas tablas MIS_IN y UP_SELLING
+    function renderTables(diasMes, diaTrabajado) {
+      renderMisInTable(diasMes, diaTrabajado);
+      renderUpSellingTable(diasMes, diaTrabajado);
+    }
+    
+    // Al cargar la página, renderiza los datos
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("diasMesValue").innerText = diasMesStatic;
+      document.getElementById("diaTrabajadoValue").innerText = diaTrabajadoStatic;
+      document.getElementById("diaPorTrabajarValue").innerText = diaPorTrabajarStatic;
+      renderTables(diasMesStatic, diaTrabajadoStatic);
+      renderArrivalsTable();
+    });
+    
+    document.getElementById("btnExport").addEventListener("click", async function() {
+  window.scrollTo(0, 0);
+  const container = document.getElementById("reportContainer");
+  
+  // Agregamos un estilo temporal que fuerza la opacidad completa, el color heredado y corrige el margin-top de títulos y tablas
+  const styleOverride = document.createElement("style");
+  styleOverride.id = "exportOverride";
+  styleOverride.innerHTML = `
+    #reportContainer, #reportContainer * {
+      opacity: 1 !important;
+      color: inherit !important;
+    }
+    /* Ajusta el margin-top de los títulos */
+    h1, h2, h3, .titulo {
+      margin-top: 70px !important;
+    }
+    /* Ajusta el margin-top de las tablas */
+    table {
+      margin-top: -40px !important;
+    }
+  `;
+  document.head.appendChild(styleOverride);
+  
+  // Forzamos fondo blanco en el contenedor
+  const originalBg = container.style.backgroundColor;
+  container.style.backgroundColor = "#ffffff";
+  container.style.opacity = "1";
+  
+  // Esperamos a que se apliquen los cambios de estilo
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  try {
+    const canvas = await html2canvas(container, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      letterRendering: true,
+      logging: true,
+      scrollX: 0,
+      scrollY: 2
+    });
+    const imgData = canvas.toDataURL("image/png");
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'pt', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    // Ajusta la imagen para llenar la página completa del A4. El offset (2,0) se puede modificar según se requiera.
+    doc.addImage(imgData, 'PNG', 2, 0, pageWidth, pageHeight);
+    doc.save("Reporte_GB.pdf");
+  } catch (error) {
+    console.error("Error al generar el PDF:", error);
+  } finally {
+    // Restauramos el fondo original
+    container.style.backgroundColor = originalBg;
+    // Eliminamos el estilo temporal
+    const override = document.getElementById("exportOverride");
+    if (override) {
+      override.parentNode.removeChild(override);
+    }
+  }
+});
+
+  </script>
+</body>
+</html>
