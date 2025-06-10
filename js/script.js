@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // "Base de datos" simulada:
     const registeredUsers = {
         "CRISMER": { fullName: "CRISMER AQUISE" },
-        "JHOAN":   { fullName: "JHOAN BAUTISTA" },
+        "GEANELLA":   { fullName: "GEANELLA HUANCARI" },
         "MARGOTH":   { fullName: "MARGOTH MENDEZ" },
         "LUIS":   { fullName: "LUIS MARTINEZ" },
         "DAVID":   { fullName: "DAVID ESTEBAN" },
@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         "CRISTHIAN":   { fullName: "CRISTHIAN CARRIZALES" },
          "MANUEL":   { fullName: "MANUEL MARMANILLO" },
          "JESSICA":   { fullName: "JESSICA CARHUAZ" },
+         "JOSE":   { fullName: "JOSE VILLAVICENCIO" },
         // Agrega más usuarios según sea necesario.
     };
 
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nombreInput.value = userData.fullName;  // Autocompleta con el nombre completo
             console.log("User autocompleted:", userData.fullName);
         } else {
-            alertModalBody.innerText = "El nombre ingresado no está registrado.";
+            alertModalBody.innerText = "Su nombre ingresado no está registrado.";
             alertModal.show();
             nombreInput.value = "";
         }
@@ -111,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         if (!found) {
-            alertModalBody.innerText = "El nombre ingresado no está registrado.";
+            alertModalBody.innerText = "Su nombre ingresado no está registrado.";
             alertModal.show();
             return;
         }
