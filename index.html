@@ -368,6 +368,79 @@ img {
 .modal-contenido {
   top: 15%; 
 }
+
+/* --- ESTILOS PARA EL BANNER SUPERIOR --- */
+.shutdown-banner {
+    background-color: #ffc107; /* Amarillo advertencia */
+    color: #333;
+    text-align: center;
+    padding: 15px;
+    position: fixed; /* O 'sticky' si lo prefieres */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: none; /* Oculto por defecto */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.close-banner-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.close-banner-btn:hover {
+    color: #000;
+}
+
+
+/* --- ESTILOS PARA EL MODAL --- */
+.shutdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.shutdown-modal {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.shutdown-modal h2 {
+    color: #d9534f; /* Rojo peligro */
+    margin-top: 0;
+}
+
+.shutdown-modal button {
+    background-color: #0275d8;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.shutdown-modal button:hover {
+    background-color: #025aa5;
+}
     </style>
 </head>
 <body>
@@ -419,17 +492,26 @@ img {
     <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
   </button>
   
-
-  <p style="background:transparent; color: #fff; padding: 15px 10px; text-align: center; font-size: 0.9rem;"  > Sistema &copy; Mayo 2025</p>
-
+<div id="shutdown-overlay" class="shutdown-overlay">
+    <div id="shutdown-modal" class="shutdown-modal">
+        <h2>Aviso de Suspensión de Servicio</h2>
+        <p>
+            Te informamos que el sistema dejará de funcionar muy pronto para un mantenimiento programado.
+        </p>
+        <p>
+            <strong>Fecha y Hora:</strong> A partir de las 10:00 PM del 25/07/2025 (GMT-5).<br>
+            <strong>Impacto:</strong> El sistema no estará disponible.
+        </p>
+        <p>
+            Por favor, <strong>Registrese en Nuestro nuevo sistema</strong> <a href="https://asamblea-work.firebaseapp.com/index.html">Sistema Gestion</a>
+        </p>
+        <button id="close-shutdown-modal-btn">Entendido</button>
+    </div>
 </div>
-
-<h2 style="color:red;" >Aviso Importante</h2>
-    <p style="color:white;">Este sistema dejará de funcionar el día 20/07/2025 Horas 12:00</p>
-    <p style="color:white;">Por favor, registrese en el Nuevo sistema <a style="color:green; font-size: 50px; font-family: arial; text-decoration: none;" href="#" onclick="alert('Implementando, Pronto te podras Registrar'); return false;">
-Registrarse</a>  Agradecemos su comprensión.</p>
-
-
+<div id="shutdown-banner" class="shutdown-banner">
+    <strong>Aviso:</strong> El sistema dejará de funcionar por mantenimiento el 25/07/2025 a las 10:00 PM (GMT-5).
+    <span id="close-shutdown-banner-btn" class="close-banner-btn">&times;</span>
+</div>
 <!-- HATA AQUI VA TODO DE FORMULARIO DE LOGIN -->
 
 
@@ -463,26 +545,31 @@ Registrarse</a>  Agradecemos su comprensión.</p>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
 <script>
-  // Obtener los elementos del DOM
-  const modal = document.getElementById("aviso-modal");
-  const botonCerrar = document.querySelector(".modal-cerrar");
+document.addEventListener('DOMContentLoaded', function() {
+    // --- ELEMENTOS DEL DOM ---
+    const modalOverlay = document.getElementById('shutdown-overlay');
+    const closeModalBtn = document.getElementById('close-shutdown-modal-btn');
 
-  // Función para mostrar el modal cuando la página cargue
-  window.onload = function() {
-    modal.style.display = "block";
-  };
+    // --- FECHAS ---
+    // Fecha y hora en que el sistema dejará de funcionar
+    const shutdownDate = new Date('2025-07-25T22:00:00-05:00');
+    // Fecha y hora actual
+    const now = new Date();
 
-  // Función para cerrar el modal al hacer clic en la 'X'
-  botonCerrar.onclick = function() {
-    modal.style.display = "none";
-  };
-
-  // También cierra el modal si el usuario hace clic fuera de la ventana
-  window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+    // --- LÓGICA DIRECTA ---
+    // Si la fecha actual es ANTERIOR a la fecha de suspensión, muestra el modal.
+    if (now < shutdownDate) {
+        modalOverlay.style.display = 'flex';
     }
-  };
+
+    // --- BOTÓN DE CIERRE ---
+    // El botón solo oculta el modal, pero volverá a aparecer si se recarga la página.
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function() {
+            modalOverlay.style.display = 'none';
+        });
+    }
+});
 </script>
 </body>
 </html>
